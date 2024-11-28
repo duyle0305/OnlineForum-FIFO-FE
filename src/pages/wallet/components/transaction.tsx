@@ -73,7 +73,7 @@ const Transactions: FC = () => {
             id: orderPoint?.orderId,
             title: 'Deposit',
             type: 'Order Point',
-            amount: orderPoint.amount,
+            amount: orderPoint.monkeyCoinPack.point,
             createdDate: orderPoint.orderDate,
         })) || [];
 

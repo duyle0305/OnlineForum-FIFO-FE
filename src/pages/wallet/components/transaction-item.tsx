@@ -151,7 +151,7 @@ interface TransactionItemProps {
 }
 
 const TransactionItem: FC<TransactionItemProps> = ({ image, title, description, amount, createdDate }) => {
-    const isNegative = description === 'Transaction' || description === 'Order Point'; // Check if the transaction is negative
+    const isNegative = description === 'Transaction'; // Check if the transaction is negative
 
     return (
         <div css={style} className="transaction-item">
