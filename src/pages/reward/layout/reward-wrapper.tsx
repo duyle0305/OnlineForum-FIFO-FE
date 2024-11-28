@@ -1,0 +1,36 @@
+import type { RootState } from '@/stores';
+import type { FC } from 'react';
+
+import { Card, Divider, Flex } from 'antd';
+import React from 'react';
+import { useSelector } from 'react-redux';
+
+import PageBreadcrumbs from '@/components/core/page-breadcrumbs';
+import SecondaryTag from '@/components/core/secondary-tag';
+import { useGetWalletByAccount } from '@/hooks/query/wallet/use-get-wallet-by-account';
+
+interface RewardWrapperProps {
+    children: React.ReactNode;
+}
+
+const RewardWrapper: FC<RewardWrapperProps> = ({ children }) => {
+    const { accountInfo } = useSelector((state: RootState) => state.account);
+
+    const { data: wallet } = useGetWalletByAccount(accountInfo?.accountId as string);
+
+    return (
+        <Card>
+            <Flex justify="space-between" align="center">
+                <PageBreadcrumbs />
+
+                <SecondaryTag>Balance: {wallet?.balance} MC</SecondaryTag>
+            </Flex>
+
+            <Divider />
+
+            {children}
+        </Card>
+    );
+};
+
+export default RewardWrapper;
