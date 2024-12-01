@@ -1,8 +1,8 @@
 import type { LogoutParams, LogoutResult, SignInRequest, SignInResponse, SignUpRequest } from '../types/auth';
-
-import { AxiosRequestConfig } from 'axios';
+import type { AxiosRequestConfig } from 'axios';
 
 import { ApiPaths } from '@/consts/apis';
+
 import { request } from './request';
 
 export const apiSignIn = (data: SignInRequest) => request<SignInResponse>('post', ApiPaths.SIGNIN, data);

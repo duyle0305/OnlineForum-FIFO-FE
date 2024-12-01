@@ -1,8 +1,10 @@
-import RewardCard from '@/components/core/reward-card';
-import React from 'react';
-import PlaceholderSvg from '/public/placeholder.svg';
+import type { Event } from '@/types/event';
+
 import { Flex, Typography } from 'antd';
-import { Event } from '@/types/event';
+import React from 'react';
+
+import PlaceholderSvg from '/public/placeholder.svg';
+import RewardCard from '@/components/core/reward-card';
 import dayjsConfig from '@/utils/dayjs';
 
 interface EventItemProps {

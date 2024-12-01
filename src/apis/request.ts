@@ -1,16 +1,18 @@
+import type { Response } from '@/types';
+import type { RefreshTokenResponse } from '@/types/auth';
+import type { AxiosError, AxiosRequestConfig, AxiosResponse, Method } from 'axios';
+
+import { message as $message } from 'antd';
+import axios from 'axios';
+import Qs from 'qs';
+
 import { ApiConfigs, ApiPaths } from '@/consts/apis';
 import { LocalStorageKeys } from '@/consts/local-storage';
 import store from '@/stores';
 import { setGlobalState } from '@/stores/global';
-import { Response } from '@/types';
-import { RefreshTokenResponse } from '@/types/auth';
 import { historyNavigation } from '@/utils/common';
 import { API_PATH } from '@/utils/env';
 import { PATHS } from '@/utils/paths';
-import { message as $message } from 'antd';
-import type { AxiosError, AxiosRequestConfig, AxiosResponse, Method } from 'axios';
-import axios from 'axios';
-import Qs from 'qs';
 
 export type BaseResponse<T = any> = Promise<Response<T>>;
 
@@ -36,6 +38,7 @@ axiosInstance.interceptors.request.use(
 
     error => {
         setLoadingState(false);
+
         return Promise.reject(error);
     },
 );
@@ -43,19 +46,17 @@ axiosInstance.interceptors.request.use(
 let isRefreshToken = false;
 
 axiosInstance.interceptors.response.use(
-    (axiosResponse: AxiosResponse) => {
+    (axiosResponse: AxiosResponse<any>) => {
         setLoadingState(false);
 
-        const { code, entity } = axiosResponse?.data;
+        const { code, entity, message = 'Success' } = axiosResponse?.data || {};
 
-        const response: Response<any> = {
+        return {
             success: code === ApiConfigs.API_SUCCESS_CODE,
-            message: 'Success',
+            message,
             code: code,
             entity: entity,
         };
-
-        return response;
     },
 
     async (err: AxiosError) => {
@@ -64,7 +65,13 @@ axiosInstance.interceptors.response.use(
         const originalConfig = err.config;
         const { response } = err;
 
-        if (originalConfig.url !== ApiPaths.REFRESH_TOKEN && response && response.status === 401 && !isRefreshToken) {
+        if (
+            originalConfig &&
+            originalConfig.url !== ApiPaths.REFRESH_TOKEN &&
+            response &&
+            response.status === 401 &&
+            !isRefreshToken
+        ) {
             isRefreshToken = true;
 
             // clear previous access token;
@@ -86,6 +93,7 @@ axiosInstance.interceptors.response.use(
                 const { success, entity } = res;
 
                 isRefreshToken = false;
+
                 if (success && entity && entity.accessToken) {
                     const { accessToken } = entity;
 
@@ -101,7 +109,7 @@ axiosInstance.interceptors.response.use(
             }
         }
 
-        const { code, message, data } = response?.data || {};
+        const { code, message, data } = response ? response.data : {};
         const errorResponse: Response<unknown> = {
             success: code === ApiConfigs.API_SUCCESS_CODE,
             message: message || 'An error ocurred',

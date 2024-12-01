@@ -1,14 +1,16 @@
-import { lazy, type FC } from 'react';
+import type { RootState } from '@/stores';
 import type { RouteObject } from 'react-router';
 
-import { historyNavigation } from '@/utils/common';
+import { type FC, lazy } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useLocation, useNavigate, useRoutes } from 'react-router-dom';
-import WrapperRouteComponent from './config';
-import { PATHS } from '@/utils/paths';
+
 import MainLayout from '@/layout/main-layout';
-import { RootState } from '@/stores';
 import VerifyOtpResetPasswordPage from '@/pages/auth/forgot-password/verify-otp';
+import { historyNavigation } from '@/utils/common';
+import { PATHS } from '@/utils/paths';
+
+import WrapperRouteComponent from './config';
 
 const SignInPage = lazy(() => import('@/pages/auth/signin'));
 const SignUpPage = lazy(() => import('@/pages/auth/signup'));
@@ -126,7 +128,7 @@ const routes: RouteObject[] = [
             {
                 path: PATHS.EXPLORE,
                 element: <WrapperRouteComponent element={<ExplorePage />} title="Explore" />,
-            }
+            },
         ],
     },
     {
@@ -144,7 +146,7 @@ const routes: RouteObject[] = [
     {
         path: PATHS.OTP_RESET_PASSWORD,
         element: <WrapperRouteComponent element={<VerifyOtpResetPasswordPage />} title="OTP Reset Password" />,
-    }, 
+    },
     {
         path: PATHS.CREATE_NEW_PASSWORD,
         element: <WrapperRouteComponent element={<CreateNewPasswordPage />} title="Create new password" />,
@@ -168,6 +170,7 @@ const RenderRouter: FC = () => {
     historyNavigation.location = useLocation();
 
     const element = useRoutes(routes);
+
     return element;
 };
 

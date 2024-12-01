@@ -1,3 +1,14 @@
+import type { SignInRequest } from '@/types/auth';
+import type { FormProps } from 'antd';
+import type { FC } from 'react';
+
+import { LockOutlined, UserOutlined } from '@ant-design/icons';
+import { css } from '@emotion/react';
+import { useQueryClient } from '@tanstack/react-query';
+import { App, Divider, Form, Input } from 'antd';
+import { useDispatch } from 'react-redux';
+import { Link, useNavigate } from 'react-router-dom';
+
 import GooglIcon from '@/assets/icons/Google.svg';
 import AuthFormWrapper from '@/components/authen/form-wrapper';
 import AuthPageLayout from '@/components/authen/layout';
@@ -6,15 +17,7 @@ import { authKeys } from '@/consts/factory/auth';
 import { LocalStorageKeys } from '@/consts/local-storage';
 import { useSignIn } from '@/hooks/mutate/auth/use-signin';
 import { setAccountState } from '@/stores/account';
-import { SignInRequest } from '@/types/auth';
 import { PATHS } from '@/utils/paths';
-import { LockOutlined, UserOutlined } from '@ant-design/icons';
-import { css } from '@emotion/react';
-import { useQueryClient } from '@tanstack/react-query';
-import { App, Divider, Form, FormProps, Input } from 'antd';
-import { FC } from 'react';
-import { useDispatch } from 'react-redux';
-import { Link, useNavigate } from 'react-router-dom';
 
 type FieldType = {
     username?: string;
@@ -56,7 +59,7 @@ const SignInPage: FC = () => {
             },
             onError: error => {
                 message.error(error.message);
-            }
+            },
         });
     };
 
