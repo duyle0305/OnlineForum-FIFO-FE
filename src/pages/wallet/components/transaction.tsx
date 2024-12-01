@@ -28,6 +28,7 @@ type FormatTransaction = {
     title: string;
     type: string;
     amount: number;
+    status: string;
     createdDate: string;
 };
 
@@ -48,6 +49,7 @@ const Transactions: FC = () => {
             title: bonusPoint?.post?.title || '',
             type: 'Bonus Point',
             amount: bonusPoint.pointEarned,
+            status: 'success',
             createdDate: bonusPoint.createdDate,
         })) || [];
 
@@ -57,6 +59,7 @@ const Transactions: FC = () => {
             title: dailyPoint?.post?.title || '',
             type: 'Daily Point',
             amount: dailyPoint.pointEarned,
+            status: 'success',
             createdDate: dailyPoint.createdDate,
         })) || [];
 
@@ -66,6 +69,7 @@ const Transactions: FC = () => {
             title: transaction?.reward?.name,
             type: transaction.type,
             amount: transaction.amount,
+            status: 'success',
             createdDate: transaction.createdDate,
         })) || [];
 
@@ -74,6 +78,7 @@ const Transactions: FC = () => {
             id: orderPoint?.orderId,
             title: 'Deposit ' + numberFormat(orderPoint?.amount, ',') + ' VNĐ',
             type: 'Order Point',
+            status: orderPoint.status,
             amount: orderPoint.monkeyCoinPack.point,
             createdDate: orderPoint.orderDate,
         })) || [];
@@ -184,6 +189,7 @@ const Transactions: FC = () => {
                         description={transaction?.type}
                         title={transaction?.title}
                         createdDate={transaction?.createdDate}
+                        status={transaction?.status}
                     />
                 ))}
             </Flex>

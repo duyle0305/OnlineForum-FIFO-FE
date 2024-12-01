@@ -1,6 +1,6 @@
 import type { PageData } from '@/types';
-import { NavigateFunction, NavigationType } from "react-router-dom"
 
+import { NavigateFunction, NavigationType } from 'react-router-dom';
 
 export function getStrTimesIndex(str: string, cha: string, num: number) {
     let x = str.indexOf(cha);
@@ -20,7 +20,6 @@ export function getFirstPathCode(path: string) {
 
     return activeKey;
 }
-
 
 export const getTableData = <T extends any[]>(pageNum = 1, pageSize = 10, totalData: T) => {
     const total: number = totalData.length;
@@ -69,13 +68,12 @@ export function getGlobalState() {
     } as const;
 }
 
-
 interface HistoryNavigationType {
-    navigate?: any,
-    location?: any
+    navigate?: any;
+    location?: any;
 }
 
 export const historyNavigation = {
     navigate: null,
-    location: null
+    location: null,
 } as HistoryNavigationType;
