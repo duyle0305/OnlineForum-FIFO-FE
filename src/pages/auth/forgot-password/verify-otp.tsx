@@ -3,12 +3,16 @@ import AuthPageLayout from '@/components/authen/layout';
 import AuthResultPage from '@/components/authen/result';
 import BaseButton from '@/components/core/button';
 import { OTP_EXPIRE_TIME } from '@/consts/common';
-import { useOtpVerify, useResendOtp } from '@/hooks/mutate/auth/use-otp-verify';
+import {
+    useOtpVerifyForgetPassword,
+    useResendOtpForgetPassword,
+} from '@/hooks/mutate/auth/use-otp-verify-forget-password';
 import { useMessage } from '@/hooks/use-message';
+import { RootState } from '@/stores';
 import { SuccessfulIcon } from '@/utils/asset';
 import { PATHS } from '@/utils/paths';
 import { css } from '@emotion/react';
-import { Form, FormProps, GetProps, Input } from 'antd';
+import { Form, FormProps, GetProps, Input, message } from 'antd';
 import { FC, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
@@ -19,29 +23,30 @@ type FieldType = {
     otp: string;
 };
 
-const OTPVerificationPage: FC = () => {
+const VerifyOtpResetPasswordPage: FC = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const [form] = Form.useForm();
 
+    const { error } = useMessage();
+
+    const email = useSelector((state: RootState) => state.account?.email);
+
     const [timeCount, setTimeCount] = useState(OTP_EXPIRE_TIME);
     const [verifySuccess, setVerifySuccess] = useState(false);
 
-    const { mutate: verifyOtp, isPending: isPendingVerifyOtp } = useOtpVerify();
-    const { mutate: resendOtp, isPending: isPendingResendOtp } = useResendOtp();
-
-        const { error } = useMessage();
-
+    const { mutate: verifyOtp, isPending: isPendingVerifyOtp } = useOtpVerifyForgetPassword();
+    const { mutate: resendOtp, isPending: isPendingResendOtp } = useResendOtpForgetPassword();
 
     const onFinish: FormProps<FieldType>['onFinish'] = async values => {
         verifyOtp(
             {
-                email: localStorage.getItem('email') as string,
+                email: email as string,
                 otp: values.otp,
             },
             {
                 onSuccess: () => {
-                    navigate(PATHS.SIGNIN);
+                    navigate(PATHS.CREATE_NEW_PASSWORD);
                     setVerifySuccess(true);
                 },
                 onError: err => {
@@ -110,7 +115,7 @@ const OTPVerificationPage: FC = () => {
                                     htmlType="button"
                                     loading={isPendingResendOtp}
                                     onClick={() => {
-                                        resendOtp({ email: localStorage.getItem('email') as string });
+                                        resendOtp({ email: email as string });
                                         setTimeCount(OTP_EXPIRE_TIME);
                                     }}
                                 >
@@ -160,4 +165,4 @@ const styles = css(`
     }
 `);
 
-export default OTPVerificationPage;
+export default VerifyOtpResetPasswordPage;

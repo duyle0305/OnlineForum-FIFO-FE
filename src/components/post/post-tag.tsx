@@ -24,7 +24,7 @@ export const PostTag: FC<PostTagProps> = ({ children, backgroundColor = '#518EF8
                 },
             }}
         >
-            <Tag>{children}</Tag>
+            <Tag onClick={e => e.stopPropagation()}>{children}</Tag>
         </ConfigProvider>
     );
 };

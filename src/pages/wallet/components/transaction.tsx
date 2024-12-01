@@ -63,7 +63,7 @@ const Transactions: FC = () => {
         data?.transactionList?.map(transaction => ({
             id: transaction?.transactionId,
             title: transaction?.reward?.name,
-            type: 'Transaction',
+            type: transaction.type,
             amount: transaction.amount,
             createdDate: transaction.createdDate,
         })) || [];
@@ -71,7 +71,7 @@ const Transactions: FC = () => {
     const orderPointTransactions: FormatTransaction[] =
         data?.orderPointList?.map(orderPoint => ({
             id: orderPoint?.orderId,
-            title: 'Deposit',
+            title: '',
             type: 'Order Point',
             amount: orderPoint.monkeyCoinPack.point,
             createdDate: orderPoint.orderDate,
@@ -80,8 +80,8 @@ const Transactions: FC = () => {
     const allTransactions = [
         ...bonusPointsTransactions,
         ...dailyPointsTransactions,
-        ...orderPointTransactions,
         ...transactionList,
+        ...orderPointTransactions,
     ];
 
     const handleChangeType = (value: string) => {
@@ -130,64 +130,6 @@ const Transactions: FC = () => {
         }
     };
 
-    // return (
-    //     <div css={styles}>
-    //         <Flex justify="space-between" className="transaction-header">
-    //             <p>
-    //                 <Typography.Text
-    //                     style={{
-    //                         fontSize: 20,
-    //                         fontWeight: 500,
-    //                     }}
-    //                 >
-    //                     Last Transaction
-    //                 </Typography.Text>
-    //             </p>
-    //             <Flex gap={16}>
-    //                 <Space>
-    //                     <Typography.Text>Type:</Typography.Text>
-    //                     <Select
-    //                         allowClear
-    //                         style={{
-    //                             minWidth: 120,
-    //                         }}
-    //                         options={Object.keys(TransactionType).map(k => ({
-    //                             label: TransactionType[k as keyof typeof TransactionType],
-    //                             value: TransactionType[k as keyof typeof TransactionType],
-    //                         }))}
-    //                         onChange={value => handleChangeType(value)}
-    //                     />
-    //                 </Space>
-
-    //                 <Space>
-    //                     <Typography.Text>Date:</Typography.Text>
-    //                     <DatePicker.RangePicker
-    //                         format={DATE_FORMAT}
-    //                         onChange={e => {
-    //                             setParams({
-    //                                 ...params,
-    //                                 startDate: e?.[0] ? dayjs(e?.[0]).format('YYYY-MM-DD') : undefined,
-    //                                 endDate: e?.[1] ? dayjs(e?.[1]).format('YYYY-MM-DD') : undefined,
-    //                             });
-    //                         }}
-    //                     />
-    //                 </Space>
-    //             </Flex>
-    //         </Flex>
-    //         <Flex className="transaction-items" vertical gap={20}>
-    //             {allTransactions?.map(transaction => (
-    //                 <TransactionItem
-    //                     key={transaction?.id}
-    //                     image={accountInfo?.avatar || ''}
-    //                     amount={transaction?.amount}
-    //                     description={transaction?.type}
-    //                     title={transaction?.title}
-    //                     createdDate={transaction?.createdDate}
-    //                 />
-    //             ))}
-    //         </Flex>
-    //     </div>
-    // );
     return (
         <div css={styles}>
             <Flex justify="space-between" className="transaction-header">

@@ -37,17 +37,23 @@ const ToggleTruncateTextTypography = ({ content, maxLength }: ToggleTruncateText
 
     return (
         // write logic to show more or less text
-        <Typography.Paragraph>
-            <div dangerouslySetInnerHTML={{
-                __html: text,
-            }}/>
+        <Typography.Paragraph onClick={e => e.stopPropagation()}>
+            <div
+                onClick={e => e.stopPropagation()}
+                dangerouslySetInnerHTML={{
+                    __html: text,
+                }}
+            />
             {isShowLess && (
                 <Typography.Link
                     style={{
                         marginLeft: '10px',
                         color: '#1890ff',
                     }}
-                    onClick={handleToggle}
+                    onClick={e => {
+                        e.stopPropagation()
+                        handleToggle();
+                    }}
                 >
                     Read Less
                 </Typography.Link>
@@ -58,7 +64,10 @@ const ToggleTruncateTextTypography = ({ content, maxLength }: ToggleTruncateText
                         marginLeft: '10px',
                         color: '#1890ff',
                     }}
-                    onClick={handleToggle}
+                    onClick={e => {
+                        e.stopPropagation()
+                        handleToggle();
+                    }}
                 >
                     Read More
                 </Typography.Link>

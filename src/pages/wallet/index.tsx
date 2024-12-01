@@ -1,13 +1,16 @@
-import { BaseCard } from '@/components/core/card';
-import { useWallet } from '@/hooks/query/auth/use-wallet';
+import type { RootState } from '@/stores';
+import type { FC } from 'react';
+
 import { css } from '@emotion/react';
 import { Flex, Spin } from 'antd';
-import { FC } from 'react';
+import { useSelector } from 'react-redux';
+
+import { BaseCard } from '@/components/core/card';
+import { useWallet } from '@/hooks/query/auth/use-wallet';
+import { useGetWalletByAccount } from '@/hooks/query/wallet/use-get-wallet-by-account';
+
 import Balance from './components/balance';
 import Transactions from './components/transaction';
-import { useSelector } from 'react-redux';
-import { RootState } from '@/stores';
-import { useGetWalletByAccount } from '@/hooks/query/wallet/use-get-wallet-by-account';
 
 const WalletPage: FC = () => {
     const { accountInfo } = useSelector((state: RootState) => state.account);

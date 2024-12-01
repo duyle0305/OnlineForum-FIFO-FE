@@ -1,15 +1,14 @@
-import type { RootState } from '@/stores';
+import { lazy, type FC } from 'react';
 import type { RouteObject } from 'react-router';
 
-import { type FC, lazy } from 'react';
+import { historyNavigation } from '@/utils/common';
 import { useDispatch, useSelector } from 'react-redux';
 import { useLocation, useNavigate, useRoutes } from 'react-router-dom';
-
-import MainLayout from '@/layout/main-layout';
-import { historyNavigation } from '@/utils/common';
-import { PATHS } from '@/utils/paths';
-
 import WrapperRouteComponent from './config';
+import { PATHS } from '@/utils/paths';
+import MainLayout from '@/layout/main-layout';
+import { RootState } from '@/stores';
+import VerifyOtpResetPasswordPage from '@/pages/auth/forgot-password/verify-otp';
 
 const SignInPage = lazy(() => import('@/pages/auth/signin'));
 const SignUpPage = lazy(() => import('@/pages/auth/signup'));
@@ -127,11 +126,7 @@ const routes: RouteObject[] = [
             {
                 path: PATHS.EXPLORE,
                 element: <WrapperRouteComponent element={<ExplorePage />} title="Explore" />,
-            },
-            {
-                path: PATHS.SOURCECODEDOWNLOAD,
-                element: <WrapperRouteComponent element={<ExplorePage />} title="Source Code & Download" />,
-            },
+            }
         ],
     },
     {
@@ -146,6 +141,10 @@ const routes: RouteObject[] = [
         path: PATHS.FORGOT_PASSWORD,
         element: <WrapperRouteComponent element={<ForgotPasswordPage />} title="Forgot password" />,
     },
+    {
+        path: PATHS.OTP_RESET_PASSWORD,
+        element: <WrapperRouteComponent element={<VerifyOtpResetPasswordPage />} title="OTP Reset Password" />,
+    }, 
     {
         path: PATHS.CREATE_NEW_PASSWORD,
         element: <WrapperRouteComponent element={<CreateNewPasswordPage />} title="Create new password" />,
@@ -169,7 +168,6 @@ const RenderRouter: FC = () => {
     historyNavigation.location = useLocation();
 
     const element = useRoutes(routes);
-
     return element;
 };
 

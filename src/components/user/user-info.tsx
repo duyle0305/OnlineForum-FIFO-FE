@@ -20,7 +20,10 @@ export const UserInfo: FC<UserInfoProps> = ({ account }) => {
     };
 
     return (
-        <Flex align="center" onClick={handleNavigate} gap={8}>
+        <Flex align="center" onClick={(e) => {
+            e.stopPropagation();
+            handleNavigate();
+        }} gap={8}>
             <Avatar size={40} shape="circle" src={account?.avatar || AvatarPlaceholder} />
             <Flex vertical>
                 <Typography.Text>{account?.username}</Typography.Text>

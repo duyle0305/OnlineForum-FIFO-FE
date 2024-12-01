@@ -21,6 +21,8 @@ export interface AccountState {
   accountInfo?: Account
 
   userInfo?: Account
+
+  email?: string
 }
 
 const initialStates: AccountState = {

@@ -1,26 +1,35 @@
-import { RightOutlined } from '@ant-design/icons';
 import { Breadcrumb, Button } from 'antd';
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import TagXSvg from '/public/tag-x.svg';
+import { RightOutlined } from '@ant-design/icons';
 
-const PageBreadcrumbs = () => {
+interface Props {
+    title?: string;
+}
+
+const PageBreadcrumbs = ({title} : Props) => {
     const navigate = useNavigate();
+    const { id } = useParams();
 
     const [history, setHistory] = useState<string>('');
 
-    const pathSnippets = location.pathname.split('/').filter(i => i);
-    const extraBreadcrumbItems = pathSnippets.map((_, index) => {
-        const url = `/${pathSnippets.slice(0, index + 1).join('/')}`;
+    const splitPath = location.pathname.split('/');
 
+    if (splitPath.length > 2) {
+        splitPath.pop();
+    }
+
+    const pathSnippets = splitPath.filter(i => i);
+    const extraBreadcrumbItems = pathSnippets.map((_, index) => {
+        let url = `/${pathSnippets.slice(0, index + 1).join('/')}`;
         return {
             path: url,
-            // breadcrumbName: (
-            //     <Link to={url} onClick={() => setHistory(location.pathname)}>
-            //         {url.split('/').splice(-1)?.[0]}
-            //     </Link>
-            // ),
+            breadcrumbName: (
+                <Link to={url} onClick={() => setHistory(location.pathname)}>
+                    {title || url.split('/').splice(-1)?.[0]}
+                </Link>
+            ),
         };
     });
 
@@ -50,12 +59,11 @@ const PageBreadcrumbs = () => {
                 }),
         },
     ];
-
     return (
         <Breadcrumb>
             {breadcrumbItems.map(item => (
                 <React.Fragment key={item.path}>
-                    {/* <Breadcrumb.Item>{item.breadcrumbName}</Breadcrumb.Item> */}
+                    <Breadcrumb.Item>{item.breadcrumbName}</Breadcrumb.Item>
                 </React.Fragment>
             ))}
         </Breadcrumb>

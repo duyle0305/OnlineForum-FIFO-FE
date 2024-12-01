@@ -1,4 +1,18 @@
-import { Button, Card, Checkbox, Dropdown, Flex, Form, FormListFieldData, Image, Modal, Tag, Typography } from 'antd';
+import {
+    Button,
+    Card,
+    Checkbox,
+    Divider,
+    Dropdown,
+    Flex,
+    Form,
+    FormListFieldData,
+    Image,
+    Modal,
+    Spin,
+    Tag,
+    Typography,
+} from 'antd';
 import { UserInfo } from '../user/user-info';
 import { PostTag } from './post-tag';
 import {
@@ -43,6 +57,8 @@ import { bookmarkKeys } from '@/consts/factory/bookmark';
 import { PATHS } from '@/utils/paths';
 import { usePostDownload } from '@/hooks/query/post/use-post-download';
 import ToggleTruncateTextTypography from './toggle-truncate-text-typography';
+import { DOWNLOAD_POINT } from '@/consts/common';
+import { useGetWalletByAccount } from '@/hooks/query/wallet/use-get-wallet-by-account';
 
 const { confirm } = Modal;
 
@@ -124,11 +140,20 @@ export const PostItem: FC<PostItemProps> = ({
     const [expandable, setExpandable] = useState(false);
     const [isShowComment, setIsShowComment] = useState(showComment);
 
+    const { data: wallet, isLoading } = useGetWalletByAccount(accountInfo?.accountId as string);
     const { data: upvotes } = useUpvoteListing();
     const { data: bookmarks } = useBookmarkListing();
     const { mutate: toggleBookmark, isPending: isPendingToggleBookmark } = useToggleBookmark();
     const { mutate: upvote, isPending: isPendingUpvote } = useToggleUpvote();
-    const { trigger: download, data: downloadData } = usePostDownload(postId);
+    const {
+        trigger: download,
+        data: downloadData,
+        isSuccess: isSuccessDownload,
+        isError: isErrorDownload,
+        error: errorDownload,
+        isPending: isPendingDownload,
+        isLoading: isLoadingDownload,
+    } = usePostDownload(postId);
     const { mutate: deletePost, isPending: isPendingDeletePost } = useDeletePost(postId, {
         onSuccess: () => {
             queryClient.invalidateQueries({
@@ -208,8 +233,20 @@ export const PostItem: FC<PostItemProps> = ({
 
     // useDownloadZip(downloadData?.entity, postId, 'zip');
 
+    useEffect(() => {
+        if (isSuccessDownload) {
+            window.open(data?.postFileList?.[0]?.url, '_blank');
+        }
+    }, [isSuccessDownload]);
+
+    useEffect(() => {
+        if (isErrorDownload) {
+            error(errorDownload?.message);
+        }
+    }, [isErrorDownload, errorDownload]);
+
     return (
-        <Card style={{ cursor: 'pointer' }}>
+        <Card style={{ cursor: 'pointer' }} onClick={() => navigate(PATHS.POST_DETAIL.replace(':id', data?.postId))}>
             <Flex vertical gap={8}>
                 <Flex justify="space-between" align="flex-start">
                     <Flex align="center" gap={8}>
@@ -223,6 +260,7 @@ export const PostItem: FC<PostItemProps> = ({
                                     display: 'flex',
                                     alignItems: 'center',
                                 }}
+                                onClick={e => e.stopPropagation()}
                             >
                                 {topic?.name}
                             </Tag>
@@ -287,19 +325,23 @@ export const PostItem: FC<PostItemProps> = ({
                                     ],
                                 }}
                             >
-                                <Button type="text" icon={<EllipsisOutlined style={{ fontSize: 20 }} />} />
+                                <Button
+                                    onClick={e => e.stopPropagation()}
+                                    type="text"
+                                    icon={<EllipsisOutlined style={{ fontSize: 20 }} />}
+                                />
                             </Dropdown>
                         )}
-                        {!id && showDetail && (
+                        {/* {!id && showDetail && (
                             <IconButton
                                 icon={<EyeOutlined />}
                                 children=""
                                 onClick={() => navigate(PATHS.POST_DETAIL.replace(':id', data?.postId))}
                             />
-                        )}
+                        )} */}
                         {showCheckbox && field && (
                             <Form.Item name={[field.name, 'checked']} valuePropName="checked">
-                                <Checkbox />
+                                <Checkbox onClick={e => e.stopPropagation()} />
                             </Form.Item>
                         )}
                     </Flex>
@@ -313,30 +355,105 @@ export const PostItem: FC<PostItemProps> = ({
                         textDecoration: 'underline',
                         cursor: 'pointer',
                     }}
+                    onClick={e => e.stopPropagation()}
                 >
                     {title}
                 </Typography.Title>
 
                 <ToggleTruncateTextTypography content={content} maxLength={200} />
 
-                <Flex gap={10} wrap>
+                <Flex gap={10} wrap onClick={e => e.stopPropagation()}>
                     {imageList?.map(file => (
-                        <div className="ant-upload" key={file.imageId}>
-                            <Image src={file.url} alt={file.url} />
+                        <div className="ant-upload" key={file.imageId} onClick={e => e.stopPropagation()}>
+                            <Image src={file.url} alt={file.url} onClick={e => e.stopPropagation()} />
                         </div>
                     ))}
                 </Flex>
 
-                <Flex gap={8}>
-                    {getFileNameFromUrl(data?.postFileList?.[0]?.url) && <FileZipOutlined />}
-                    <Link to={data?.postFileList?.[0]?.url} target="_blank">
-                        {getFileNameFromUrl(data?.postFileList?.[0]?.url)}
-                    </Link>
-                </Flex>
+                <Spin spinning={isLoadingDownload} size="small">
+                    <Flex
+                        gap={8}
+                        onClick={e => {
+                            e.stopPropagation();
+                        }}
+                        style={{
+                            color: '#007AFF',
+                        }}
+                    >
+                        {getFileNameFromUrl(data?.postFileList?.[0]?.url) && <FileZipOutlined />}
+                        <Typography.Link
+                            onClick={e => {
+                                e.stopPropagation();
+                                confirm({
+                                    title: 'Confirm',
+                                    content: (
+                                        <>
+                                            <Typography.Text type="secondary">
+                                                Do you want to download this file?
+                                            </Typography.Text>
+                                            <Flex vertical align="center">
+                                                <Typography.Title
+                                                    level={3}
+                                                    color="#FF6934"
+                                                    style={{
+                                                        color: '#FF6934',
+                                                        marginTop: 24,
+                                                    }}
+                                                >
+                                                    -{DOWNLOAD_POINT} MC
+                                                </Typography.Title>
+                                            </Flex>
+                                            <Divider />
+                                            <Flex justify="space-between">
+                                                <Typography.Title level={4}>Balance:</Typography.Title>
+                                                <Typography.Title level={4}>{wallet?.balance} MC</Typography.Title>
+                                            </Flex>
+                                            <Flex justify="space-between">
+                                                <Typography.Title
+                                                    level={4}
+                                                    style={{
+                                                        color:
+                                                            (wallet?.balance || 0) - (DOWNLOAD_POINT || 0) < 0
+                                                                ? 'red'
+                                                                : 'black',
+                                                    }}
+                                                >
+                                                    Remaining:
+                                                </Typography.Title>
+                                                <Typography.Title
+                                                    level={4}
+                                                    style={{
+                                                        color:
+                                                            (wallet?.balance || 0) - (DOWNLOAD_POINT || 0) < 0
+                                                                ? 'red'
+                                                                : 'black',
+                                                    }}
+                                                >
+                                                    {(wallet?.balance || 0) - (DOWNLOAD_POINT || 0)} MC
+                                                </Typography.Title>
+                                            </Flex>
+                                            <Divider />
+                                        </>
+                                    ),
+                                    onOk: () => {
+                                        download();
+                                    },
+                                });
+                            }}
+                            style={{
+                                color: '#007AFF',
+                            }}
+                        >
+                            {getFileNameFromUrl(data?.postFileList?.[0]?.url)}
+                        </Typography.Link>
+                    </Flex>
+                </Spin>
 
-                <Typography.Text type="secondary">Posted {dayjsConfig(createdDate).fromNow()}</Typography.Text>
+                <Typography.Text type="secondary" onClick={e => e.stopPropagation()}>
+                    Posted {dayjsConfig(createdDate).fromNow()}
+                </Typography.Text>
 
-                <Flex gap={32} vertical>
+                <Flex gap={32} vertical onClick={e => e.stopPropagation()}>
                     {showLike && (
                         <Flex justify="end" gap={20}>
                             <IconButton

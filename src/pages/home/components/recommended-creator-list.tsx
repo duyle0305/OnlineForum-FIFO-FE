@@ -1,18 +1,15 @@
 import { Card, Empty, Flex } from 'antd';
-import { useNavigate } from 'react-router-dom';
-
 import ArrowRightSvg from '/public/arrow-right.svg';
-import { useGetFollows } from '@/hooks/query/follow/use-follow-listing';
-import { useGetFollowTopAccounts, useGetRecommendations } from '@/hooks/query/follow/use-follow-top-accounts';
-import { PATHS } from '@/utils/paths';
-
-import { EventsWrapper } from '../layout/events-wrapper';
 import { RecommendedItem } from './recommended-item';
+import { EventsWrapper } from '../layout/events-wrapper';
+import { useGetFollowTopAccounts, useGetRecommendations } from '@/hooks/query/follow/use-follow-top-accounts';
+import { useGetFollows } from '@/hooks/query/follow/use-follow-listing';
+import { useNavigate } from 'react-router-dom';
+import { PATHS } from '@/utils/paths';
 
 export const RecommendedCreatorList = () => {
     const navigate = useNavigate();
 
-    // const { data: topAccounts } = useGetFollowTopAccounts();
     const { data: topAccounts } = useGetRecommendations();
     const { data: follows } = useGetFollows();
 
@@ -39,8 +36,7 @@ export const RecommendedCreatorList = () => {
         >
             <EventsWrapper>
                 {topAccounts?.length ? (
-                    topAccounts?.map(account => (
-                        // <RecommendedItem key={account?.accountId} account={account} follows={follows} />
+                    topAccounts?.slice(0, 5)?.map(account => (
                         <RecommendedItem
                             key={account?.account?.accountId}
                             account={account?.account}

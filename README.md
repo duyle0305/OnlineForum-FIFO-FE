@@ -1,28 +1,20 @@
-# OnlineForum-FIFO-FE
+#### LIST PAGES
 
-Capstone Project FPTU
 
-#### LIST TASK
+#### Ngọc Sơn
+- [ ] Sign up 
+- [ ] Sign in
+- [ ] Forgot password
+- [ ] Create new password
+- [ ] Wallet
+- [ ] Notification page
 
-#### Anh Duy
-
--   [ ] Sign up
--   [ ] Sign in
--   [ ] Forgot password
--   [ ] Create new password
--   [ ] Wallet
--   [ ] Notification page
--   [ ] Reward/ Exchange Reward
--   [ ] Feedback
--   [ ] Help + Content policies + About
-
-#### Ngô Bảo
-
--   [ ] Home page
--   [ ] Create post
--   [ ] Post detail
--   [ ] Bookmark
--   [ ] Event page
--   [ ] Event detail page
--   [ ] Recommended creator
--   [ ] Profile [Posts, Medias, Replies]
+#### Minh Đức
+- [ ] Home page
+- [ ] Create post
+- [ ] Post detail
+- [ ] Event page
+- [ ] Event detail page
+- [ ] Help + Content policies + About
+- [ ] Profile [Posts, Medias, Replies]
+ 

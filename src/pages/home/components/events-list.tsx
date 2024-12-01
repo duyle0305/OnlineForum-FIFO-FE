@@ -1,12 +1,10 @@
 import { Card, Empty, Flex } from 'antd';
-import { useNavigate } from 'react-router-dom';
-
 import ArrowRightSvg from '/public/arrow-right.svg';
-import { useEventListing } from '@/hooks/query/event/use-event-listing';
-import { PATHS } from '@/utils/paths';
-
 import { EventsWrapper } from '../layout/events-wrapper';
 import { EventItem } from './event-item';
+import { useNavigate } from 'react-router-dom';
+import { PATHS } from '@/utils/paths';
+import { useEventListing } from '@/hooks/query/event/use-event-listing';
 
 export const EventList = () => {
     const navigate = useNavigate();

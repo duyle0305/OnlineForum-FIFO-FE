@@ -5,6 +5,7 @@ export const PATHS = {
     FORGOT_PASSWORD: '/forgot-password',
     CREATE_NEW_PASSWORD: '/create-new-password',
     OTP_VERIFICATION: '/otp',
+    OTP_RESET_PASSWORD: '/otp-reset-password',
     POSTS: '/posts',
     POST_DETAIL: '/posts/:id',
     PROFILE: '/profile',
@@ -25,5 +26,4 @@ export const PATHS = {
     DEPOSIT: '/deposit',
     RECOMMENDATIONS: '/recommendations',
     EXPLORE: '/explore',
-    SOURCECODEDOWNLOAD: '/sourcecode_dowload',
 };
