@@ -52,7 +52,7 @@ export const RecommendedItem = ({ account, follows }: RecommendedItemProps) => {
             align="flex-start"
             gap={10}
             justify="space-between"
-            onClick={() => navigate(`${PATHS.USER_PROFILE}/${account?.accountId}`)}
+            // onClick={() => navigate(`${PATHS.USER_PROFILE}/${account?.accountId}`)}
         >
             <Flex gap={10}>
                 <Image
