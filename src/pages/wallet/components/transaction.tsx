@@ -12,6 +12,7 @@ import { Link } from 'react-router-dom';
 import { DATE_FORMAT, FULL_TIME_FORMAT } from '@/consts/common';
 import { useRedeemHistory } from '@/hooks/query/redeem/use-redeem-documents';
 import { useTransactionsCurrentAccount } from '@/hooks/query/transaction/use-transactions-current-account';
+import { numberFormat } from '@/utils/number';
 
 import TransactionItem from './transaction-item';
 
@@ -71,7 +72,7 @@ const Transactions: FC = () => {
     const orderPointTransactions: FormatTransaction[] =
         data?.orderPointList?.map(orderPoint => ({
             id: orderPoint?.orderId,
-            title: '',
+            title: 'Deposit ' + numberFormat(orderPoint?.amount, ',') + ' VNĐ',
             type: 'Order Point',
             amount: orderPoint.monkeyCoinPack.point,
             createdDate: orderPoint.orderDate,
