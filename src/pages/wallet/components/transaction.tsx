@@ -66,8 +66,8 @@ const Transactions: FC = () => {
     const transactionList: FormatTransaction[] =
         data?.transactionList?.map(transaction => ({
             id: transaction?.transactionId,
-            title: transaction?.reward?.name,
-            type: transaction.type,
+            title: transaction?.reward?.name || 'Report Post',
+            type: transaction?.reward?.name ? 'Exchange SourceCode' : 'Report',
             amount: transaction.amount,
             status: 'success',
             createdDate: transaction.createdDate,
