@@ -1,28 +1,35 @@
-import { StarIcon } from "@/utils/asset";
-import { css } from "@emotion/react";
-import { Avatar, Card, Flex, Typography } from "antd";
-import { FC } from "react";
+import type { FC } from 'react';
+
+import { css } from '@emotion/react';
+import { Avatar, Card, Flex, Typography } from 'antd';
+
+import { StarIcon } from '@/utils/asset';
 
 const NotificationItem: FC = () => {
-    return <Card css={styles}>
-        <Flex vertical gap={6}>
-            <Flex align="center" gap={10}>
+    return (
+        <Card css={styles}>
+            <Flex vertical gap={6}>
+                <Flex align="center" gap={10}>
+                    <div>
+                        <img src={StarIcon}></img>
+                    </div>
+                    <div>
+                        <Avatar />
+                    </div>
+                </Flex>
                 <div>
-                    <img src={StarIcon}></img>
+                    <Typography.Text className="notification-title">NOTIFICATION TITLE</Typography.Text>
                 </div>
                 <div>
-                    <Avatar />
+                    <Typography.Text>
+                        It is a long established fact that a reader will be distracted by the readable content of a page
+                        when looking at its layout.
+                    </Typography.Text>
                 </div>
             </Flex>
-            <div>
-                <Typography.Text className="notification-title">NOTIFICATION TITLE</Typography.Text>
-            </div>
-            <div>
-                <Typography.Text>It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.</Typography.Text>
-            </div>
-        </Flex>
-    </Card>
-}
+        </Card>
+    );
+};
 
 const styles = css(`
     border-radius: 0;
@@ -32,5 +39,6 @@ const styles = css(`
         font-size: 16px;
     }
 
-`)
+`);
+
 export default NotificationItem;
