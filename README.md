@@ -1,20 +1,25 @@
-#### LIST PAGES
+#### LIST TASK
 
+#### Anh Duy
 
-#### Ngọc Sơn
-- [ ] Sign up 
+- [ ] Sign up
 - [ ] Sign in
 - [ ] Forgot password
 - [ ] Create new password
 - [ ] Wallet
-- [ ] Notification page
+- [ ] Deposit
+- [ ] Notification
+- [ ] Reward/ Exchange Reward
+- [ ] Feedback
+- [ ] Resource - Help(Terms and Rules + Private Policy) + Content policies + About
 
-#### Minh Đức
+#### Ngô Bảo
+
 - [ ] Home page
 - [ ] Create post
 - [ ] Post detail
+- [ ] Bookmark
 - [ ] Event page
 - [ ] Event detail page
-- [ ] Help + Content policies + About
+- [ ] Recommended creator
 - [ ] Profile [Posts, Medias, Replies]
- 
