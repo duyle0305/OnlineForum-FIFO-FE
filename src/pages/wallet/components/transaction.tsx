@@ -49,7 +49,7 @@ const Transactions: FC = () => {
             title: bonusPoint?.post?.title || '',
             type: 'Bonus Point',
             amount: bonusPoint.pointEarned,
-            status: 'success',
+            status: 'SUCCESS',
             createdDate: bonusPoint.createdDate,
         })) || [];
 
@@ -59,7 +59,7 @@ const Transactions: FC = () => {
             title: dailyPoint?.post?.title || '',
             type: 'Daily Point',
             amount: dailyPoint.pointEarned,
-            status: 'success',
+            status: 'SUCCESS',
             createdDate: dailyPoint.createdDate,
         })) || [];
 
@@ -69,7 +69,7 @@ const Transactions: FC = () => {
             title: transaction?.reward?.name || 'Report Post',
             type: transaction?.reward?.name ? 'Exchange SourceCode' : 'Report',
             amount: transaction.amount,
-            status: 'success',
+            status: 'SUCCESS',
             createdDate: transaction.createdDate,
         })) || [];
 

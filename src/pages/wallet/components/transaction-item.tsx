@@ -18,7 +18,7 @@ interface TransactionItemProps {
 }
 
 const TransactionItem: FC<TransactionItemProps> = ({ image, title, description, amount, status, createdDate }) => {
-    if (status === 'success') {
+    if (status === 'SUCCESS') {
         return (
             <Flex align="center" justify="space-between">
                 <Flex align="center" gap={8}>
