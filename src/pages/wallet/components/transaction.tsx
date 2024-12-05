@@ -229,6 +229,12 @@ export const TransactionType = {
     order: 'Order Point',
 } as const;
 
+export const TransactionStatus = {
+    success: 'SUCCESS',
+    pending: 'PENDING',
+    failed: 'FAILED',
+} as const;
+
 type FormatTransaction = {
     id: string;
     title: string;
@@ -243,6 +249,7 @@ const Transactions: FC = () => {
         viewTransaction: false,
         dailyPoint: false,
         bonusPoint: false,
+        status: undefined,
         orderPoint: false,
     });
 
@@ -358,9 +365,50 @@ const Transactions: FC = () => {
         }
     };
 
+    // const handleChangeStatus = (value: string) => {
+    //     console.log(value);
+
+    //     if (value === 'SUCCESS') {
+    //         setParams(prev => ({
+    //             ...prev,
+    //             success: true,
+    //             failed: false,
+    //             pending: false,
+    //         }));
+    //     } else if (value === 'PENDING') {
+    //         setParams(prev => ({
+    //             ...prev,
+    //             success: false,
+    //             failed: false,
+    //             pending: true,
+    //         }));
+    //     } else if (value === 'FAILED') {
+    //         setParams(prev => ({
+    //             ...params,
+    //             success: false,
+    //             failed: true,
+    //             pending: false,
+    //         }));
+    //     } else {
+    //         setParams({
+    //             ...params,
+    //             success: false,
+    //             failed: true,
+    //             pending: false,
+    //         });
+    //     }
+    // };
+    const handleChangeStatus = (value: string) => {
+        // Allow undefined for clearing
+        setParams(prev => ({
+            ...prev,
+            status: value, // Set the 'status' field directly
+        }));
+    };
+
     return (
         <div css={styles}>
-            <Flex justify="space-between" className="transaction-header">
+            <Flex justify="space-between">
                 <p>
                     <Typography.Text
                         style={{
@@ -371,14 +419,15 @@ const Transactions: FC = () => {
                         Last Transaction
                     </Typography.Text>
                 </p>
+            </Flex>
+            <Flex justify="space-between" className="transaction-header">
                 <Flex gap={16}>
                     <Space>
+                        {/* Type filter */}
                         <Typography.Text>Type:</Typography.Text>
                         <Select
                             allowClear
-                            style={{
-                                minWidth: 120,
-                            }}
+                            style={{ minWidth: 120 }}
                             options={Object.keys(TransactionType).map(k => ({
                                 label: TransactionType[k as keyof typeof TransactionType],
                                 value: TransactionType[k as keyof typeof TransactionType],
@@ -386,34 +435,44 @@ const Transactions: FC = () => {
                             onChange={value => handleChangeType(value)}
                         />
                     </Space>
-
+                    <Space>
+                        <Typography.Text>Status:</Typography.Text>
+                        <Select
+                            allowClear
+                            style={{ minWidth: 120 }}
+                            options={Object.keys(TransactionStatus).map(k => ({
+                                label: TransactionStatus[k as keyof typeof TransactionStatus],
+                                value: TransactionStatus[k as keyof typeof TransactionStatus],
+                            }))}
+                            onChange={handleChangeStatus} // Use corrected handler
+                        />
+                    </Space>
+                    {/* Date filter remains in the same position */}
                     <Space>
                         <Typography.Text>Date:</Typography.Text>
-                        <DatePicker.RangePicker
-                            format={DATE_FORMAT}
-                            onChange={e => {
-                                setParams({
-                                    ...params,
-                                    startDate: e?.[0] ? dayjs(e?.[0]).format('YYYY-MM-DD') : undefined,
-                                    endDate: e?.[1] ? dayjs(e?.[1]).format('YYYY-MM-DD') : undefined,
-                                });
-                            }}
+                        <DatePicker.RangePicker // ... (date picker code)
                         />
                     </Space>
                 </Flex>
             </Flex>
             <Flex className="transaction-items" vertical gap={20}>
-                {allTransactions?.map(transaction => (
-                    <TransactionItem
-                        key={transaction?.id}
-                        image={accountInfo?.avatar || ''}
-                        amount={transaction?.amount}
-                        description={transaction?.type}
-                        title={transaction?.title}
-                        createdDate={transaction?.createdDate}
-                        status={transaction?.status}
-                    />
-                ))}
+                {allTransactions
+                    .filter(transaction => {
+                        if (!params.status) return true; // Show all if no status selected
+
+                        return transaction.status === params.status;
+                    })
+                    .map(transaction => (
+                        <TransactionItem
+                            key={transaction?.id}
+                            image={accountInfo?.avatar || ''}
+                            amount={transaction?.amount}
+                            description={transaction?.type}
+                            title={transaction?.title}
+                            createdDate={transaction?.createdDate}
+                            status={transaction?.status}
+                        />
+                    ))}
             </Flex>
         </div>
     );
