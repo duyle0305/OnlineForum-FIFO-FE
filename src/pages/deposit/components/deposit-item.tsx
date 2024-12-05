@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import type { OnAction } from '@/types';
 import type { Pack } from '@/types/pack/pack';
 
@@ -8,7 +9,6 @@ import { Button, Flex, Typography } from 'antd';
 import PlaceholderSvg from '/public/placeholder.svg';
 import RewardCard from '@/components/core/reward-card';
 import { SecondaryButton } from '@/components/core/secondary-button';
-import { packKeys } from '@/consts/factory/pack';
 import { useBuyPoints } from '@/hooks/mutate/payment/use-buy-point';
 import { useAuthorize } from '@/hooks/use-authorize';
 import { useMessage } from '@/hooks/use-message';
