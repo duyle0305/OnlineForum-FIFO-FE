@@ -222,6 +222,15 @@ import { numberFormat } from '@/utils/number';
 
 import TransactionItem from './transaction-item';
 
+interface FilterTransactionParams {
+    // Or adjust existing interface
+    viewTransaction: boolean;
+    dailyPoint: boolean;
+    bonusPoint: boolean;
+    orderPoint: boolean;
+    status: string | undefined; // Allow string or undefined for status
+}
+
 export const TransactionType = {
     bonus: 'Bonus Point',
     daily: 'Daily Point',
