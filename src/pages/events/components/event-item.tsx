@@ -1,19 +1,26 @@
-import RewardCard from '@/components/core/reward-card';
-import React from 'react';
-import PlaceholderSvg from '/public/placeholder.svg';
+import type { Event } from '@/types/event';
+
 import { Flex, Typography } from 'antd';
-import { Event } from '@/types/event';
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
+
+import PlaceholderSvg from '/public/placeholder.svg';
+import RewardCard from '@/components/core/reward-card';
 import dayjsConfig from '@/utils/dayjs';
+import { PATHS } from '@/utils/paths';
 
 interface EventItemProps {
     event: Event;
 }
 
 const EventItem = ({ event }: EventItemProps) => {
+    const navigate = useNavigate();
+
     return (
         <RewardCard
             hoverable
             style={{ width: 348 }}
+            onClick={() => navigate(PATHS.EVENT_DETAIL.replace(':id', event?.eventId))}
             cover={
                 <img alt="example" src={event?.image || PlaceholderSvg} style={{ height: 180, objectFit: 'cover' }} />
             }
