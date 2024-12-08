@@ -27,3 +27,17 @@ export const useTagsListing = ({ params }: TagListingProps) => {
         placeholderData: keepPreviousData,
     });
 };
+
+export const useTag = (id: string) => {
+    const fetchTag = async (): Promise<Tag> => {
+        const { entity } = await request<Tag>('get', `/tag/get/${id}`);
+
+        return entity;
+    };
+
+    return useQuery<Tag>({
+        queryKey: tagKeys.get(id),
+        queryFn: fetchTag,
+        placeholderData: keepPreviousData,
+    });
+}

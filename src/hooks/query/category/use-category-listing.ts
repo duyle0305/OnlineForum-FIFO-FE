@@ -48,3 +48,18 @@ export const useCategoriesListingForStaff = ({ params, enabled }: CategoryListin
         enabled
     });
 };
+
+export const useCategory = (id: string) => {
+    const fetchCategory = async (): Promise<Category> => {
+        const { entity } = await request<Category>('get', `/category/get/${id}`);
+
+        return entity;
+    };
+
+    return useQuery<Category>({
+        queryKey: categoryKeys.get(id),
+        queryFn: fetchCategory,
+        placeholderData: keepPreviousData,
+        enabled: !!id
+    });
+};

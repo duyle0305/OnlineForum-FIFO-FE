@@ -16,7 +16,7 @@ export const useCommentByPost = (postId: string, isShown: boolean) => {
         queryFn: fetchCommentByPost,
         placeholderData: keepPreviousData,
         enabled: !!postId && isShown,
-        refetchInterval: 1000,
+        // refetchInterval: 1000,
     });
 };
 
@@ -34,6 +34,6 @@ export const useGetAllComments = () => {
         queryKey: commentKeys.listing(),
         queryFn: fetchCommentByPost,
         placeholderData: keepPreviousData,
-        refetchInterval: 1000,
+        // refetchInterval: 1000,
     });
 };

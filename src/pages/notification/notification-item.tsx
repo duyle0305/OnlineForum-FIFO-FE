@@ -24,7 +24,10 @@ const NotificationItem = ({ notification }: NotificationItemProps) => {
         },
     });
 
-    const notiParsed = JSON.parse(notification?.message);
+    if (!notification) return null;
+
+    const notiParsed = notification?.message?.includes('{') 
+     ? JSON.parse(notification?.message ?? '{}') : notification?.message;
 
     return (
         <Card css={styles}>

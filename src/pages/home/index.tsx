@@ -1,15 +1,18 @@
-import { FC } from 'react';
+import type { CategoryListingParams } from '@/hooks/query/category/use-category-listing';
+import type { RootState } from '@/stores';
+import type { FC } from 'react';
+
 import { Empty, Spin } from 'antd';
-import {
-    CategoryListingParams,
-    useCategoriesListing,
-    useCategoriesListingForStaff,
-} from '@/hooks/query/category/use-category-listing';
+import { useEffect } from 'react';
+import { useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+
 import { DEFAULT_PAGE, DEFAULT_PAGE_SIZE } from '@/consts/common';
+import { useCategoriesListing, useCategoriesListingForStaff } from '@/hooks/query/category/use-category-listing';
+import { PATHS } from '@/utils/paths';
+
 import { PostSummary } from './components/post-summary';
 import { PostWrapper } from './layout/post-wrapper';
-import { useSelector } from 'react-redux';
-import { RootState } from '@/stores';
 
 const initialParams: CategoryListingParams = {
     page: DEFAULT_PAGE,
@@ -26,6 +29,14 @@ const HomePage: FC = props => {
         params: initialParams,
         enabled: accountInfo?.role?.name === 'STAFF',
     });
+
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        if (accountInfo?.role?.name === 'ADMIN') {
+            navigate(PATHS.ADMIN_DASHBOARD);
+        }
+    }, [accountInfo]);
 
     const dataSource = accountInfo?.role?.name === 'USER' ? data : staffData;
 

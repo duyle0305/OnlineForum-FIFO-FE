@@ -1,11 +1,9 @@
-import type { Event } from '@/types/event';
-
-import { keepPreviousData, useQuery } from '@tanstack/react-query';
-
 import axiosInstance, { request } from '@/apis/request';
 import { eventKeys } from '@/consts/factory/event';
 import { postKeys } from '@/consts/factory/post';
 import { Response } from '@/types';
+import { Event } from '@/types/event';
+import { keepPreviousData, useQuery } from '@tanstack/react-query';
 
 export const useGetEvent = (id: string) => {
     const fetchEvent = async (): Promise<Event> => {

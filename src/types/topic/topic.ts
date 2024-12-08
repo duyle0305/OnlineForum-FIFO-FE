@@ -10,3 +10,9 @@ export type Topic = {
     viewAmount: number;
     upvoteAmount: number;
 };
+
+export type CreateTopicPayload = {
+    name: string;
+    categoryId: string;
+    imageUrl: string;
+}

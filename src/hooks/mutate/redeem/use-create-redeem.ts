@@ -1,5 +1,5 @@
 import axiosInstance from '@/apis/request';
-import { CreateRedeemPayload } from '@/types/redeem/redeem';
+import { CreateRedeemPayload, CreateRewardPayload } from '@/types/redeem/redeem';
 import { useMutation, UseMutationOptions } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
 
@@ -16,3 +16,16 @@ export const useCreateRedeem = (
         ...options,
     });
 };
+
+export const useCreateReward = (options: UseMutationOptions<unknown, AxiosError<unknown>, CreateRewardPayload> = {}) => {
+    const createReward = async (payload: CreateRewardPayload) => {
+        return axiosInstance.post('/reward/create-reward', payload);
+    };
+
+    return useMutation<unknown, AxiosError<unknown>, CreateRewardPayload>({
+        mutationKey: ['reward', 'create'],
+        mutationFn: payload => createReward(payload),
+        ...options,
+    });
+};
+

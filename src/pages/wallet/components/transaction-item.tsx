@@ -1,8 +1,9 @@
 import type { FC } from 'react';
 
 import { css } from '@emotion/react';
-import { Avatar, Flex, Typography } from 'antd';
+import { Avatar, Flex, Tooltip, Typography } from 'antd';
 import dayjs from 'dayjs';
+import { title } from 'process';
 
 import { FULL_TIME_FORMAT } from '@/consts/common';
 import { formatSignedNumber } from '@/utils/number';
@@ -18,16 +19,17 @@ interface TransactionItemProps {
 
 const TransactionItem: FC<TransactionItemProps> = ({ image, title, description, status, amount, createdDate }) => {
     let statusColor = '#FF0000'; // Default status to red (FAILED)
-    let amountColor = '#18C07A'; // Default to green
-
-    if (status === 'PENDING' || status === 'FAILED' || amount < 0) {
-        amountColor = '#FF0000'; // Red if pending, failed, or negative amount
-    }
+    let amountColor = amount < 0 ? '#FF0000' : '#18C07A'; // Red if amount is negative, otherwise green
 
     if (status === 'SUCCESS') {
         statusColor = '#18C07A'; // Green for successful transactions
     } else if (status === 'PENDING') {
         statusColor = '#ffff00'; // Yellow for pending transactions
+        amountColor = '#FF0000'; // Red for pending transactions
+    } else if (status === 'FAILED') {
+        // Add this condition
+        statusColor = '#FF0000'; // Explicitly set to red (though already the default)
+        amountColor = '#FF0000'; // Red for failed transactions
     }
 
     return (

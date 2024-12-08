@@ -4,3 +4,9 @@ export type Tag = {
     backgroundColorHex: string;
     textColorHex: string;
 };
+
+export type CreateTagPayload = {
+    name: string;
+    backgroundColorHex: string;
+    textColorHex: string;
+}

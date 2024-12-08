@@ -2,7 +2,7 @@ import type { Event } from '@/types/event';
 
 import { Flex, Typography } from 'antd';
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Navigate, useNavigate } from 'react-router-dom';
 
 import PlaceholderSvg from '/public/placeholder.svg';
 import RewardCard from '@/components/core/reward-card';

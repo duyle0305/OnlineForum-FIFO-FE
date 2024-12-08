@@ -26,3 +26,11 @@ export type CreateRedeemPayload = {
     accountId: string;
     rewardId: string;
 };
+
+export type CreateRewardPayload = {
+    name: string;
+    price: number;
+    description: string;
+    linkSourceCode: string;
+    image: string;
+};

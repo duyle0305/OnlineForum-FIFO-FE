@@ -1,20 +1,21 @@
-import { Button, Flex, Image, Typography } from 'antd';
-import AmdSvg from '/public/amd.svg';
+import type { RootState } from '@/stores';
+import type { Account } from '@/types/account';
+import type { Follow } from '@/types/follow';
+
 import { MinusOutlined, PlusOutlined } from '@ant-design/icons';
-import { Account } from '@/types/account';
-import { Follow } from '@/types/follow';
-import { useSelector } from 'react-redux';
-import { RootState } from '@/stores';
+import { useQueryClient } from '@tanstack/react-query';
+import { Button, Flex, Image, Typography } from 'antd';
+import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+
+import AmdSvg from '/public/amd.svg';
+import { followKeys } from '@/consts/factory/follow';
 import { useCreateFollow } from '@/hooks/mutate/follow/use-create-follow';
 import { useDeleteFollow } from '@/hooks/mutate/follow/use-delete-follow';
-import { useQueryClient } from '@tanstack/react-query';
-import { followKeys } from '@/consts/factory/follow';
 import { useToggleFollow } from '@/hooks/mutate/follow/use-toggle-follow';
 import { useMessage } from '@/hooks/use-message';
-import { useNavigate } from 'react-router-dom';
-import { PATHS } from '@/utils/paths';
-import { useDispatch } from 'react-redux';
 import { setAccountState } from '@/stores/account';
+import { PATHS } from '@/utils/paths';
 
 interface RecommendedItemProps {
     account: Account;
@@ -50,8 +51,13 @@ export const RecommendedItem = ({ account, follows }: RecommendedItemProps) => {
     };
 
     return (
-        <Flex align="flex-start" gap={10} justify="space-between" onClick={() => navigate(PATHS.RECOMMENDATIONS)}>
-            <Flex gap={10}>
+        <Flex align="flex-start" gap={10} justify="space-between">
+            <Flex
+                gap={10}
+                style={{
+                    cursor: 'pointer',
+                }}
+            >
                 <Image
                     style={{
                         borderRadius: 10,

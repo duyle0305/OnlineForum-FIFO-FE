@@ -36,3 +36,13 @@ export interface UpdateProfilePayload {
     bio?: string;
 }
 
+export interface Statistic {
+    accountAmount: number;
+    accountGrowthRate: number;
+    postAmount: number;
+    postGrowthRate: number;
+    activityAmount: number;
+    activityGrowthRate: number;
+    depositAmount: number;
+    depositGrowthRate: number;
+}

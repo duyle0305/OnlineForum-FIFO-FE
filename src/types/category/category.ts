@@ -10,3 +10,10 @@ export type Category = {
     description: string;
     topicListByCategory: Topic[];
 };
+
+export type CreateCategoryPayload = {
+    name: string;
+    image: string;
+    description: string;
+    accountId: string;
+}

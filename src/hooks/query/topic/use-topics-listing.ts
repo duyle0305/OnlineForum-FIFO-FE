@@ -29,3 +29,16 @@ export const useTopicsListing = ({ params }: TopicListingProps) => {
         placeholderData: keepPreviousData,
     });
 };
+
+export const useTopic = (id: string) => {
+    const fetchTopic = async (): Promise<Topic> => {
+        const { entity } = await request<Topic>('get', `/topic/get/${id}`);
+
+        return entity;
+    };
+
+    return useQuery<Topic>({
+        queryKey: topicKeys.get(id),
+        queryFn: fetchTopic,
+    });
+};

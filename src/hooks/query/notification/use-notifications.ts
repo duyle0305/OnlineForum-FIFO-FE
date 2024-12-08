@@ -11,9 +11,9 @@ export const useNotifications = () => {
     };
 
     return useQuery({
-        queryKey: notificationsKeys.listing(),
+    queryKey: notificationsKeys.listing(),
         queryFn: fetchNotifications,
         placeholderData: keepPreviousData,
-        refetchInterval: 1000,
+        // refetchInterval: 1000,
     });
 };

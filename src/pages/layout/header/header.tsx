@@ -1,11 +1,7 @@
-import React, { useEffect, useRef, useState, type FC } from 'react';
+import type { RootState } from '@/stores';
+
 import '../index.less';
 
-import { theme as antTheme, Avatar, Badge, Dropdown, Flex, Layout, Modal, notification, Typography } from 'antd';
-import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
-
-import Logo from '/public/ftech-logo.svg';
 import {
     CaretDownFilled,
     LogoutOutlined,
@@ -15,19 +11,25 @@ import {
     UserOutlined,
     WalletOutlined,
 } from '@ant-design/icons';
-import BaseInput from '@/components/core/input';
-import { PATHS } from '@/utils/paths';
+import { Avatar, Badge, Dropdown, Flex, Layout, Modal, notification, theme as antTheme, Typography } from 'antd';
+import React, { type FC, useEffect, useRef, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+
 import BackgroundPlaceholder from '/public/background-placeholder.svg';
-import { RootState } from '@/stores';
-import { loggout } from '@/stores/account';
-import NotificationIcon from './components/notification';
+import Logo from '/public/ftech-logo.svg';
+import BaseInput from '@/components/core/input';
+import { DEFAULT_PAGE, DEFAULT_PAGE_SIZE } from '@/consts/common';
+import { useGetAllComments } from '@/hooks/query/comment/use-comment-by-post';
+import { useNotifications } from '@/hooks/query/notification/use-notifications';
+import { usePostsListing } from '@/hooks/query/post/use-posts-listing';
+import { useUpvoteListing } from '@/hooks/query/upvote/use-upvote-listing';
 import { useCategorySearch } from '@/hooks/query/utility/use-category-search';
 import { useDebounce } from '@/hooks/use-debounce';
-import { useNotifications } from '@/hooks/query/notification/use-notifications';
-import { useUpvoteListing } from '@/hooks/query/upvote/use-upvote-listing';
-import { useGetAllComments } from '@/hooks/query/comment/use-comment-by-post';
-import { usePostsListing } from '@/hooks/query/post/use-posts-listing';
-import { DEFAULT_PAGE, DEFAULT_PAGE_SIZE } from '@/consts/common';
+import { loggout } from '@/stores/account';
+import { PATHS } from '@/utils/paths';
+
+import NotificationIcon from './components/notification';
 
 const { Header } = Layout;
 
@@ -85,6 +87,7 @@ const HeaderComponent: FC<HeaderProps> = ({ collapsed, toggle }) => {
             notifications?.length > Number(localStorage.getItem('count'))
         ) {
             let content = '';
+
             console.log(notifications?.[0]?.message);
             const notiParsed = JSON.parse(notifications?.[0]?.message);
 

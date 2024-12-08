@@ -7,13 +7,15 @@ import { transactionKeys } from '@/consts/factory/transaction';
 import { Transaction } from '@/types/transaction/transaction';
 
 export type FilterTransactionParams = {
-    status?: string;
     viewTransaction: boolean;
     dailyPoint: boolean;
     bonusPoint: boolean;
     orderPoint: boolean;
     startDate?: string;
     endDate?: string;
+    success: boolean;
+    pending: boolean;
+    failed: boolean;
 };
 
 type FilterTransactionProps = {

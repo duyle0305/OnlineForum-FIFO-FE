@@ -1,10 +1,14 @@
-import SecondaryTag from '@/components/core/secondary-tag';
-import { RootState } from '@/stores';
+import type { RootState } from '@/stores';
+import type { FC } from 'react';
+
 import { Card, Divider, Flex } from 'antd';
-import React, { FC } from 'react';
+import React from 'react';
 import { useSelector } from 'react-redux';
-import { useGetWalletByAccount } from '@/hooks/query/wallet/use-get-wallet-by-account';
+
 import PageBreadcrumbs from '@/components/core/page-breadcrumbs';
+import SecondaryTag from '@/components/core/secondary-tag';
+import { useGetWalletByAccount } from '@/hooks/query/wallet/use-get-wallet-by-account';
+import { numberFormat } from '@/utils/number';
 
 interface RewardWrapperProps {
     children: React.ReactNode;
@@ -21,7 +25,8 @@ const RewardWrapper: FC<RewardWrapperProps> = ({ children, title }) => {
             <Flex justify="space-between" align="center">
                 <PageBreadcrumbs title={title} />
 
-                <SecondaryTag>Balance: {wallet?.balance} MC</SecondaryTag>
+                <SecondaryTag>Balance: {numberFormat(wallet?.balance, '.')} MC</SecondaryTag>
+                {/* <SecondaryTag>Balance: {wallet?.balance} MC</SecondaryTag> */}
             </Flex>
 
             <Divider />
