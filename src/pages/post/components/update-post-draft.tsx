@@ -1,44 +1,33 @@
-import { UserInfo } from '@/components/user/user-info';
-import {
-    Button,
-    Card,
-    Flex,
-    Form,
-    Image,
-    Input,
-    message,
-    Modal,
-    Select,
-    Space,
-    Tooltip,
-    Upload,
-    UploadFile,
-    UploadProps,
-} from 'antd';
-import GallerySvg from '/public/gallery.svg';
-import EmojiSvg from '/public/emoji.svg';
-import { OnAction } from '@/types';
-import { FC, useEffect, useState } from 'react';
-import { useQueryClient } from '@tanstack/react-query';
-import { postKeys } from '@/consts/factory/post';
-import { UpdatePostPayload } from '@/types/post/post';
-import { useMessage } from '@/hooks/use-message';
-import { useUpdateDraftToPost, useUpdatePost, useUpdatePostDraft } from '@/hooks/mutate/post/use-update-post';
-import { useGetPost } from '@/hooks/query/post/use-get-post';
-import { useSelector } from 'react-redux';
-import { RootState } from '@/stores';
-import { useUploadFile } from '@/hooks/use-upload-file';
-import { TopicListingParams, useTopicsListing } from '@/hooks/query/topic/use-topics-listing';
-import { useTagsListing } from '@/hooks/query/tag/use-tags-listing';
-import { DEFAULT_PAGE, DEFAULT_PAGE_SIZE } from '@/consts/common';
-import { useDispatch } from 'react-redux';
-import { setPost } from '@/stores/post';
+import type { TopicListingParams } from '@/hooks/query/topic/use-topics-listing';
+import type { RootState } from '@/stores';
+import type { OnAction } from '@/types';
+import type { UpdatePostPayload } from '@/types/post/post';
+import type { UploadFile, UploadProps } from 'antd';
+import type { FC } from 'react';
+
 import { PaperClipOutlined } from '@ant-design/icons';
+import { useQueryClient } from '@tanstack/react-query';
+import { Button, Card, Flex, Form, Image, Input, message, Modal, Select, Space, Tooltip, Upload } from 'antd';
+import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate, useSearchParams } from 'react-router-dom';
+
+import EmojiSvg from '/public/emoji.svg';
+import GallerySvg from '/public/gallery.svg';
 import Tiptap from '@/components/tiptap/tiptap';
+import { UserInfo } from '@/components/user/user-info';
+import { DEFAULT_PAGE, DEFAULT_PAGE_SIZE } from '@/consts/common';
+import { postKeys } from '@/consts/factory/post';
 import { useCreatePost } from '@/hooks/mutate/post/use-create-post';
 import { useDeleteDraftPost } from '@/hooks/mutate/post/use-delete-post';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useUpdateDraftToPost, useUpdatePost, useUpdatePostDraft } from '@/hooks/mutate/post/use-update-post';
 import { useCategoriesListing } from '@/hooks/query/category/use-category-listing';
+import { useGetPost } from '@/hooks/query/post/use-get-post';
+import { useTagsListing } from '@/hooks/query/tag/use-tags-listing';
+import { useTopicsListing } from '@/hooks/query/topic/use-topics-listing';
+import { useMessage } from '@/hooks/use-message';
+import { useUploadFile } from '@/hooks/use-upload-file';
+import { setPost } from '@/stores/post';
 
 interface UpdatePostProps {
     onCancel?: OnAction;
@@ -124,7 +113,7 @@ export const UpdatePostDraft: FC<UpdatePostProps> = ({ onCancel }) => {
                     setAnotherFileList([]);
                     queryClient.invalidateQueries({
                         queryKey: postKeys.drafts(),
-                    })
+                    });
                 },
                 onError: err => {
                     error(err.message);
@@ -139,8 +128,10 @@ export const UpdatePostDraft: FC<UpdatePostProps> = ({ onCancel }) => {
 
     const onRemoveFile = (file: UploadFile) => {
         const index = fileList.indexOf(file);
+
         if (index > -1) {
             const newImgUrlList = imgUrlList.slice();
+
             newImgUrlList.splice(index, 1);
             setImgUrlList(newImgUrlList);
             setFileList(fileList.filter(item => item.uid !== file.uid));
@@ -153,8 +144,10 @@ export const UpdatePostDraft: FC<UpdatePostProps> = ({ onCancel }) => {
 
     const onRemoveAnotherFile = (file: UploadFile) => {
         const index = anotherFileList.indexOf(file);
+
         if (index > -1) {
             const newImgUrlList = urlFileList.slice();
+
             newImgUrlList.splice(index, 1);
             setUrlFileList(newImgUrlList);
             setAnotherFileList(anotherFileList.filter(item => item.uid !== file.uid));
@@ -168,6 +161,7 @@ export const UpdatePostDraft: FC<UpdatePostProps> = ({ onCancel }) => {
                 url: imgUrlList[index],
             };
         });
+
         setFileList(appendFieldFileList);
     }, [imgUrlList]);
 
