@@ -1,28 +1,33 @@
+import type { RootState } from '@/stores';
+import type { PostReport } from '@/types/report/report';
+import type { Dispatch, SetStateAction } from 'react';
+
+import { EllipsisOutlined } from '@ant-design/icons';
+import { useQueryClient } from '@tanstack/react-query';
+import { Button, Card, Dropdown, Flex, Space, Tag, Typography } from 'antd';
+import React from 'react';
+import { useSelector } from 'react-redux';
+
 import { UserInfo } from '@/components/user/user-info';
 import { FULL_TIME_FORMAT } from '@/consts/common';
-import { RootState } from '@/stores';
+import { feedbackKeys } from '@/consts/factory/feedback';
+import { reportKeys } from '@/consts/factory/report';
+import { useUpdateFeedback } from '@/hooks/mutate/feedback/use-update-feedback';
+import { useUpdatePostReport } from '@/hooks/mutate/report/use-update-post-report';
+import { useMessage } from '@/hooks/use-message';
 import { Feedback } from '@/types/feedback/feedback';
 import dayjsConfig from '@/utils/dayjs';
-import { Button, Card, Dropdown, Flex, Space, Tag, Typography } from 'antd';
-import React, { Dispatch, SetStateAction } from 'react';
-import { useSelector } from 'react-redux';
-import { EllipsisOutlined } from '@ant-design/icons';
-import { useUpdateFeedback } from '@/hooks/mutate/feedback/use-update-feedback';
-import { useMessage } from '@/hooks/use-message';
-import { useQueryClient } from '@tanstack/react-query';
-import { feedbackKeys } from '@/consts/factory/feedback';
+
 import { mapFeedbackStatusColor } from '../../feedback/utils/map-feedback-status-color';
-import { PostReport } from '@/types/report/report';
-import { useUpdatePostReport } from '@/hooks/mutate/report/use-update-post-report';
-import { reportKeys } from '@/consts/factory/report';
 
 interface AdminReportItemProps {
     data: PostReport;
-    setPostId: Dispatch<SetStateAction<null| string>>;
+    setPostId: Dispatch<SetStateAction<null | string>>;
     setReport: Dispatch<SetStateAction<PostReport | null>>;
+    setOpenModal: Dispatch<SetStateAction<boolean | false>>;
 }
 
-const AdminReportItem = ({ data, setPostId, setReport }: AdminReportItemProps) => {
+const AdminReportItem = ({ data, setPostId, setReport, setOpenModal }: AdminReportItemProps) => {
     const { accountInfo } = useSelector((state: RootState) => state.account);
 
     const queryClient = useQueryClient();
@@ -42,9 +47,12 @@ const AdminReportItem = ({ data, setPostId, setReport }: AdminReportItemProps) =
     });
 
     return (
-        <Card onClick={() => {setPostId(data?.postId)
-            setReport(data as PostReport)
-        }}>
+        <Card
+            onClick={() => {
+                setPostId(data?.postId);
+                setReport(data as PostReport);
+            }}
+        >
             <Flex vertical gap={8}>
                 <Flex align="center" justify="space-between">
                     <Space size="large">
@@ -82,6 +90,25 @@ const AdminReportItem = ({ data, setPostId, setReport }: AdminReportItemProps) =
                                                     height: 24,
                                                     fontSize: 12,
                                                 }}
+                                                color={mapFeedbackStatusColor('DETAIL')}
+                                            >
+                                                DETAIL
+                                            </Tag>
+                                        ),
+                                        onClick: () => setOpenModal(true),
+                                        disabled: data?.status !== 'PENDING',
+                                    },
+                                    {
+                                        key: '2',
+                                        label: (
+                                            <Tag
+                                                style={{
+                                                    display: 'flex',
+                                                    alignItems: 'center',
+                                                    justifyContent: 'center',
+                                                    height: 24,
+                                                    fontSize: 12,
+                                                }}
                                                 color={mapFeedbackStatusColor('APPROVED')}
                                             >
                                                 APPROVED
@@ -91,7 +118,7 @@ const AdminReportItem = ({ data, setPostId, setReport }: AdminReportItemProps) =
                                         disabled: data?.status !== 'PENDING',
                                     },
                                     {
-                                        key: '2',
+                                        key: '3',
                                         label: (
                                             <Tag
                                                 style={{
