@@ -61,6 +61,7 @@ const AdminReportList = () => {
             success('Report updated successfully!');
             setPostId(null);
             setReport(null);
+            setOpenModal(false);
             queryClient.invalidateQueries({
                 queryKey: reportKeys.reportPostListing(params),
             });
