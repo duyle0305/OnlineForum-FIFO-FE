@@ -96,7 +96,7 @@ const AdminReportItem = ({ data, setPostId, setReport, setOpenModal }: AdminRepo
                                             </Tag>
                                         ),
                                         onClick: () => setOpenModal(true),
-                                        disabled: data?.status !== 'PENDING',
+                                        // disabled: data?.status !== 'PENDING',
                                     },
                                     {
                                         key: '2',
