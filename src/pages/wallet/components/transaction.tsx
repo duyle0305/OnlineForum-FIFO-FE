@@ -5,7 +5,7 @@ import type { FC } from 'react';
 
 import { css } from '@emotion/react';
 import { DatePicker, Flex, Select, Space, Typography } from 'antd';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 
 import { useTransactionsCurrentAccount } from '@/hooks/query/transaction/use-transactions-current-account';
@@ -100,7 +100,7 @@ const Transactions: FC = () => {
             id: orderPoint?.orderId,
             title: 'Deposit ' + numberFormat(orderPoint?.amount, ',') + ' VNĐ',
             type: 'Order Point',
-            status: orderPoint.status,
+            status: orderPoint.status === 'SUCCESS' ? 'SUCCESS' : 'FAILED',
             amount: orderPoint.monkeyCoinPack.point,
             createdDate: orderPoint.orderDate,
         })) || [];
