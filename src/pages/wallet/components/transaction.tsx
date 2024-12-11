@@ -82,9 +82,9 @@ const Transactions: FC = () => {
                     : transaction.transactionType, // Default to transactionType if no match
             type:
                 transaction.transactionType === 'REDEEM_REWARD'
-                    ? 'Exchange Source'
+                    ? 'Transaction'
                     : transaction.transactionType === 'POST_VIOLATION'
-                    ? 'Report'
+                    ? 'Transaction'
                     : transaction.transactionType === 'DOWNLOAD_SOURCECODE'
                     ? 'Transaction'
                     : transaction.transactionType === 'DELETE_POST'
