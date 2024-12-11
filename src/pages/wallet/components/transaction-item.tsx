@@ -17,16 +17,18 @@ interface TransactionItemProps {
     createdDate: string;
 }
 
-const TransactionItem: FC<TransactionItemProps> = ({ image, title, description, status, amount, createdDate }) => {
+const TransactionItem: FC<TransactionItemProps> = ({ image, title, description, amount, createdDate, status }) => {
     let statusColor = '#FF0000'; // Default status to red (FAILED)
     let amountColor = amount < 0 ? '#FF0000' : '#18C07A'; // Red if amount is negative, otherwise green
 
     if (status === 'SUCCESS') {
         statusColor = '#18C07A'; // Green for successful transactions
-    } else if (status === 'PENDING') {
-        statusColor = '#ffff00'; // Yellow for pending transactions
-        amountColor = '#FF0000'; // Red for pending transactions
-    } else if (status === 'FAILED') {
+    }
+    // else if (status === 'PENDING') {
+    //     statusColor = '#ffff00'; // Yellow for pending transactions
+    //     amountColor = '#FF0000'; // Red for pending transactions
+    // }
+    else if (status === 'FAILED') {
         // Add this condition
         statusColor = '#FF0000'; // Explicitly set to red (though already the default)
         amountColor = '#FF0000'; // Red for failed transactions

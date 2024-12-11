@@ -175,6 +175,7 @@ const TransactionList = () => {
                         description={transaction?.type}
                         title={transaction?.title}
                         createdDate={transaction?.createdDate}
+                        status={transaction?.transactionType ? 'SUCCESS' : 'FAILED'}
                     />
                 ))}
             </Flex>

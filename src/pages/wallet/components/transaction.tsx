@@ -22,7 +22,7 @@ export const TransactionType = {
 
 export const TransactionStatus = {
     success: 'SUCCESS',
-    pending: 'PENDING',
+    // pending: 'FAILED',
     failed: 'FAILED',
 } as const;
 
@@ -77,6 +77,8 @@ const Transactions: FC = () => {
                     ? 'Report Post'
                     : transaction.transactionType === 'DOWNLOAD_SOURCECODE'
                     ? 'Download File'
+                    : transaction.transactionType === 'DELETE_POST'
+                    ? 'Delete Post'
                     : transaction.transactionType, // Default to transactionType if no match
             type:
                 transaction.transactionType === 'REDEEM_REWARD'
@@ -84,7 +86,9 @@ const Transactions: FC = () => {
                     : transaction.transactionType === 'POST_VIOLATION'
                     ? 'Report'
                     : transaction.transactionType === 'DOWNLOAD_SOURCECODE'
-                    ? 'Download File'
+                    ? 'Transaction'
+                    : transaction.transactionType === 'DELETE_POST'
+                    ? 'Transaction'
                     : '', // Consider a default type or leave empty if none apply
             amount: transaction.amount,
             status: 'SUCCESS',
@@ -218,7 +222,7 @@ const Transactions: FC = () => {
                         <Typography.Text>Type:</Typography.Text>
                         <Select
                             allowClear
-                            style={{ minWidth: 120 }}
+                            style={{ minWidth: 100 }}
                             options={Object.keys(TransactionType).map(k => ({
                                 label: TransactionType[k as keyof typeof TransactionType],
                                 value: TransactionType[k as keyof typeof TransactionType],
@@ -230,7 +234,7 @@ const Transactions: FC = () => {
                         <Typography.Text>Status:</Typography.Text>
                         <Select
                             allowClear
-                            style={{ minWidth: 120 }}
+                            style={{ minWidth: 100 }}
                             options={Object.keys(TransactionStatus).map(k => ({
                                 label: TransactionStatus[k as keyof typeof TransactionStatus],
                                 value: TransactionStatus[k as keyof typeof TransactionStatus],

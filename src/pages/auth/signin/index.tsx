@@ -1,3 +1,16 @@
+import type { SignInRequest } from '@/types/auth';
+import type { FormProps } from 'antd';
+import type { FC } from 'react';
+
+import { LockOutlined, UserOutlined } from '@ant-design/icons';
+import { css } from '@emotion/react';
+import { useGoogleLogin } from '@react-oauth/google';
+import { useQueryClient } from '@tanstack/react-query';
+import { App, Divider, Form, Input } from 'antd';
+import { useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { Link, useNavigate } from 'react-router-dom';
+
 import GooglIcon from '@/assets/icons/Google.svg';
 import AuthFormWrapper from '@/components/authen/form-wrapper';
 import AuthPageLayout from '@/components/authen/layout';
@@ -6,16 +19,7 @@ import { authKeys } from '@/consts/factory/auth';
 import { LocalStorageKeys } from '@/consts/local-storage';
 import { useSignIn } from '@/hooks/mutate/auth/use-signin';
 import { setAccountState } from '@/stores/account';
-import { SignInRequest } from '@/types/auth';
 import { PATHS } from '@/utils/paths';
-import { LockOutlined, UserOutlined } from '@ant-design/icons';
-import { css } from '@emotion/react';
-import { useGoogleLogin } from '@react-oauth/google';
-import { useQueryClient } from '@tanstack/react-query';
-import { App, Divider, Form, FormProps, Input } from 'antd';
-import { FC, useState } from 'react';
-import { useDispatch } from 'react-redux';
-import { Link, useNavigate } from 'react-router-dom';
 
 type FieldType = {
     username?: string;
@@ -119,11 +123,11 @@ const SignInPage: FC = () => {
                         </Form.Item>
                     </Form>
 
-                    <Divider plain className="divider">
+                    {/* <Divider plain className="divider">
                         <span>Or</span>
-                    </Divider>
+                    </Divider> */}
 
-                    <BaseButton
+                    {/* <BaseButton
                         size="large"
                         variant="outlined"
                         shape="round"
@@ -133,7 +137,7 @@ const SignInPage: FC = () => {
                     >
                         <img src={GooglIcon}></img>
                         <span>Google</span>
-                    </BaseButton>
+                    </BaseButton> */}
 
                     <div className="link-create-account">
                         <p>Have no acount yet?</p>

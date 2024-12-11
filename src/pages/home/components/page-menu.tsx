@@ -1,14 +1,17 @@
-import BaseMenu from '@/components/core/menu';
+import type { RootState } from '@/stores';
+import type { GetProp, MenuProps } from 'antd';
+
 import Icon from '@ant-design/icons';
-import { GetProp, MenuProps } from 'antd';
-import HomeSvg from '/public/home.svg';
-import BookMarkSvg from '/public/android.svg';
-import ExploreSvg from '/public/source-code.svg';
-import { useNavigate } from 'react-router-dom';
+import { FaViacoin } from 'react-icons/fa';
 import { useDispatch, useSelector } from 'react-redux';
-import { PATHS } from '@/utils/paths';
-import { RootState } from '@/stores';
+import { useNavigate } from 'react-router-dom';
+
+import BookMarkSvg from '/public/android.svg';
+import HomeSvg from '/public/home.svg';
+import ExploreSvg from '/public/source-code.svg';
+import BaseMenu from '@/components/core/menu';
 import { setAccountState } from '@/stores/account';
+import { PATHS } from '@/utils/paths';
 
 type MenuItem = GetProp<MenuProps, 'items'>[number];
 
