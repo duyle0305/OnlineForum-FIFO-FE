@@ -8,6 +8,7 @@ import type { FC } from 'react';
 import { PaperClipOutlined } from '@ant-design/icons';
 import { useQueryClient } from '@tanstack/react-query';
 import { Button, Card, Flex, Form, Image, Input, message, Modal, Select, Space, Upload } from 'antd';
+import { getStorage, ref } from 'firebase/storage';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -36,8 +37,9 @@ const initialParams: TopicListingParams = {
 
 export const UpdatePost: FC<UpdatePostProps> = ({ onCancel }) => {
     const { accountInfo } = useSelector((state: RootState) => state.account);
-    const [form] = Form.useForm();
 
+    const [form] = Form.useForm();
+    const storage = getStorage();
     const watchContent = Form.useWatch('content', form);
 
     const dispatch = useDispatch();
@@ -76,6 +78,7 @@ export const UpdatePost: FC<UpdatePostProps> = ({ onCancel }) => {
                 }),
                 ...(urlFileList.length > 0 && {
                     linkFile: urlFileList[0] as string,
+                    postFileUrlRequest: [{ url: urlFileList[0] as string }],
                 }),
             },
             {
@@ -161,7 +164,7 @@ export const UpdatePost: FC<UpdatePostProps> = ({ onCancel }) => {
                     ? [
                           {
                               uid: detail?.postFileList?.[0]?.url,
-                              name: detail?.postFileList?.[0]?.url,
+                              name: ref(storage, detail?.postFileList?.[0]?.url)?.name,
                               url: detail?.postFileList?.[0]?.url,
                               status: 'done',
                           },
