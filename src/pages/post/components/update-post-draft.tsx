@@ -248,7 +248,7 @@ export const UpdatePostDraft: FC<UpdatePostProps> = ({ onCancel }) => {
     };
 
     return (
-        <Modal title="Update Post" open={type === 'update' && open} onCancel={onCancel} footer={null} width={'80vw'}>
+        <Modal title="Update Draft" open={type === 'update' && open} onCancel={onCancel} footer={null} width={'80vw'}>
             <Card>
                 <Flex vertical gap={10}>
                     <UserInfo account={accountInfo!} />
