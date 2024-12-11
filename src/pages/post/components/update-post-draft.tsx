@@ -8,6 +8,7 @@ import type { FC } from 'react';
 import { PaperClipOutlined } from '@ant-design/icons';
 import { useQueryClient } from '@tanstack/react-query';
 import { Button, Card, Flex, Form, Image, Input, message, Modal, Select, Space, Tooltip, Upload } from 'antd';
+import { getStorage, ref } from 'firebase/storage';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useSearchParams } from 'react-router-dom';
@@ -42,7 +43,7 @@ export const UpdatePostDraft: FC<UpdatePostProps> = ({ onCancel }) => {
     const navigate = useNavigate();
     const { accountInfo } = useSelector((state: RootState) => state.account);
     const [form] = Form.useForm();
-
+    const storage = getStorage();
     const [searchParams, setSearchParams] = useSearchParams();
 
     const watchContent = Form.useWatch('content', form);
@@ -100,6 +101,7 @@ export const UpdatePostDraft: FC<UpdatePostProps> = ({ onCancel }) => {
                 }),
                 ...(urlFileList.length > 0 && {
                     linkFile: urlFileList[0] as string,
+                    postFileUrlRequest: [{ url: urlFileList[0] as string }],
                 }),
             },
             {
@@ -188,7 +190,7 @@ export const UpdatePostDraft: FC<UpdatePostProps> = ({ onCancel }) => {
                     ? [
                           {
                               uid: detail?.postFileList?.[0]?.url,
-                              name: detail?.postFileList?.[0]?.url,
+                              name: ref(storage, detail?.postFileList?.[0]?.url)?.name,
                               url: detail?.postFileList?.[0]?.url,
                               status: 'done',
                           },
@@ -201,54 +203,54 @@ export const UpdatePostDraft: FC<UpdatePostProps> = ({ onCancel }) => {
     // TODO: Implement onPost function
     const onPost = () => {
         form.validateFields().then(() => {
-            // createPost(
-            //     {
-            //         ...form.getFieldsValue(),
-            //         ...(fileList.length > 0 && {
-            //             imageUrlList: fileList.map(file => ({
-            //                 url: file.url as string,
-            //             })),
-            //         }),
-            //         ...(urlFileList.length > 0 && {
-            //             linkFile: urlFileList[0] as string,
-            //             postFileUrlRequest: [{ url: urlFileList[0] as string }],
-            //         }),
-            //     },
-            //     {
-            //         onSuccess: () => {
-            //             success('Post created successfully!');
-            //             queryClient.invalidateQueries({
-            //                 queryKey: postKeys.listing(),
-            //             });
-            //             deletePostDraft([detail?.postId], {
-            //                 onSuccess: () => {
-            //                     queryClient.invalidateQueries({
-            //                         queryKey: postKeys.listing(),
-            //                     });
-            //                     navigate(-1);
-            //                 },
-            //                 onError: err => {
-            //                     error(err?.message ?? 'Failed to delete post');
-            //                 },
-            //             });
-            //             dispatch(setPost({ id: undefined, modal: { open: false, type: 'update' } }));
-            //             onCancel && onCancel();
-            //             form.resetFields();
-            //             setImgUrlList([]);
-            //             setUrlFileList([]);
-            //             setAnotherFileList([]);
-            //         },
-            //         onError: err => {
-            //             error(err.message);
-            //         },
-            //     },
-            // );
-            draftToPost();
+            createPost(
+                {
+                    ...form.getFieldsValue(),
+                    ...(fileList.length > 0 && {
+                        imageUrlList: fileList.map(file => ({
+                            url: file.url as string,
+                        })),
+                    }),
+                    ...(urlFileList.length > 0 && {
+                        linkFile: urlFileList[0] as string,
+                        postFileUrlRequest: [{ url: urlFileList[0] as string }],
+                    }),
+                },
+                {
+                    onSuccess: () => {
+                        success('Post created successfully!');
+                        queryClient.invalidateQueries({
+                            queryKey: postKeys.listing(),
+                        });
+                        deletePostDraft([detail?.postId], {
+                            onSuccess: () => {
+                                queryClient.invalidateQueries({
+                                    queryKey: postKeys.listing(),
+                                });
+                                navigate(-1);
+                            },
+                            onError: err => {
+                                error(err?.message ?? 'Failed to delete post');
+                            },
+                        });
+                        dispatch(setPost({ id: undefined, modal: { open: false, type: 'update' } }));
+                        onCancel && onCancel();
+                        form.resetFields();
+                        setImgUrlList([]);
+                        setUrlFileList([]);
+                        setAnotherFileList([]);
+                    },
+                    onError: err => {
+                        error(err.message);
+                    },
+                },
+            );
+            // draftToPost();
         });
     };
 
     return (
-        <Modal title="Update Post" open={type === 'update' && open} onCancel={onCancel} footer={null} width={'80vw'}>
+        <Modal title="Update Draft" open={type === 'update' && open} onCancel={onCancel} footer={null} width={'80vw'}>
             <Card>
                 <Flex vertical gap={10}>
                     <UserInfo account={accountInfo!} />

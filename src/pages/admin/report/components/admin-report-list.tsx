@@ -1,21 +1,26 @@
-import { Button, Checkbox, Dropdown, Empty, Flex, GetProp, Input, Modal, Popover, Tag, Typography } from 'antd';
-import React, { useEffect } from 'react';
-import AdminFeedbackWrapper from '../../feedback/layout/admin-feedback-wrapper';
-import { PostReportParams, useReportPostsListing } from '@/hooks/query/report/use-report-posts';
-import AdminReportItem from './admin-report-item';
-import { DEFAULT_PAGE, DEFAULT_PAGE_SIZE } from '@/consts/common';
+import type { PostReportParams } from '@/hooks/query/report/use-report-posts';
+import type { FeedbackStatus } from '@/types/feedback/feedback';
+import type { PostReport } from '@/types/report/report';
+import type { GetProp } from 'antd';
+
 import { DeleteOutlined, EllipsisOutlined, FilterOutlined, SearchOutlined } from '@ant-design/icons';
-import { mapFeedbackStatusColor } from '../../feedback/utils/map-feedback-status-color';
-import { FeedbackStatus } from '@/types/feedback/feedback';
-import { useDebounce } from '@/hooks/use-debounce';
-import { useGetPost } from '@/hooks/query/post/use-get-post';
-import { PostItem } from '@/components/post/post-item';
-import { PostReport } from '@/types/report/report';
-import { useUpdatePostReport } from '@/hooks/mutate/report/use-update-post-report';
 import { useQueryClient } from '@tanstack/react-query';
-import { useMessage } from '@/hooks/use-message';
+import { Button, Checkbox, Dropdown, Empty, Flex, Input, Modal, Popover, Tag, Typography } from 'antd';
+import React, { useEffect } from 'react';
+
+import { PostItem } from '@/components/post/post-item';
+import { DEFAULT_PAGE, DEFAULT_PAGE_SIZE } from '@/consts/common';
 import { reportKeys } from '@/consts/factory/report';
 import { useDeletePost } from '@/hooks/mutate/post/use-delete-post';
+import { useUpdatePostReport } from '@/hooks/mutate/report/use-update-post-report';
+import { useGetPost } from '@/hooks/query/post/use-get-post';
+import { useReportPostsListing } from '@/hooks/query/report/use-report-posts';
+import { useDebounce } from '@/hooks/use-debounce';
+import { useMessage } from '@/hooks/use-message';
+
+import AdminFeedbackWrapper from '../../feedback/layout/admin-feedback-wrapper';
+import { mapFeedbackStatusColor } from '../../feedback/utils/map-feedback-status-color';
+import AdminReportItem from './admin-report-item';
 
 const { confirm } = Modal;
 
@@ -29,6 +34,7 @@ const AdminReportList = () => {
     const [params, setParams] = React.useState<PostReportParams>(initialParams);
     const [search, setSearch] = React.useState<string>('');
     const [postId, setPostId] = React.useState<string | null>(null);
+    const [openModal, setOpenModal] = React.useState<boolean | false>(false);
     const [report, setReport] = React.useState<PostReport | null>(null);
 
     const queryClient = useQueryClient();
@@ -206,6 +212,7 @@ const AdminReportList = () => {
                         data={reportPost}
                         setPostId={setPostId}
                         setReport={setReport}
+                        setOpenModal={setOpenModal}
                     />
                 ))
             ) : (
@@ -215,8 +222,9 @@ const AdminReportList = () => {
             {detail && (
                 <Modal
                     title="Reported Post"
-                    open={!!postId}
+                    open={openModal}
                     onCancel={() => {
+                        setOpenModal(false);
                         setPostId(null);
                     }}
                     footer={null}
