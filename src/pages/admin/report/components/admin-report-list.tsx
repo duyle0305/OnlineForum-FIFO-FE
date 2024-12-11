@@ -271,7 +271,7 @@ const AdminReportList = () => {
                                                     ),
                                                     onClick: e => {
                                                         e.domEvent.stopPropagation();
-                                                        // updatePostReport('APPROVED');
+                                                        updatePostReport('APPROVED');
                                                     },
                                                     disabled: report?.status !== 'PENDING',
                                                 },
@@ -306,7 +306,11 @@ const AdminReportList = () => {
                                             ],
                                         }}
                                     >
-                                        <Button onClick={e => e.stopPropagation()} type="text" icon={<EllipsisOutlined style={{ fontSize: 20 }} />} />
+                                        <Button
+                                            onClick={e => e.stopPropagation()}
+                                            type="text"
+                                            icon={<EllipsisOutlined style={{ fontSize: 20 }} />}
+                                        />
                                     </Dropdown>
                                 </Flex>
                             </>
