@@ -22,7 +22,7 @@ type PostListingProps = {
 
 export const usePostsListing = ({ params }: PostListingProps) => {
     const fetchPosts = async (): Promise<Post[]> => {
-        const { entity } = await request<Post[]>('get', '/post/getall/by-current-user', params, {
+        const { entity } = await request<Post[]>('get', '/post/getall', params, {
             paramsSerializer: {
                 indexes: null,
             },
