@@ -1,33 +1,28 @@
-import type { RootState } from '@/stores';
-import type { PostReport } from '@/types/report/report';
-import type { Dispatch, SetStateAction } from 'react';
-
-import { EllipsisOutlined } from '@ant-design/icons';
-import { useQueryClient } from '@tanstack/react-query';
-import { Button, Card, Dropdown, Flex, Space, Tag, Typography } from 'antd';
-import React from 'react';
-import { useSelector } from 'react-redux';
-
 import { UserInfo } from '@/components/user/user-info';
 import { FULL_TIME_FORMAT } from '@/consts/common';
-import { feedbackKeys } from '@/consts/factory/feedback';
-import { reportKeys } from '@/consts/factory/report';
-import { useUpdateFeedback } from '@/hooks/mutate/feedback/use-update-feedback';
-import { useUpdatePostReport } from '@/hooks/mutate/report/use-update-post-report';
-import { useMessage } from '@/hooks/use-message';
+import { RootState } from '@/stores';
 import { Feedback } from '@/types/feedback/feedback';
 import dayjsConfig from '@/utils/dayjs';
-
+import { Button, Card, Dropdown, Flex, Space, Tag, Typography } from 'antd';
+import React, { Dispatch, SetStateAction } from 'react';
+import { useSelector } from 'react-redux';
+import { EllipsisOutlined } from '@ant-design/icons';
+import { useUpdateFeedback } from '@/hooks/mutate/feedback/use-update-feedback';
+import { useMessage } from '@/hooks/use-message';
+import { useQueryClient } from '@tanstack/react-query';
+import { feedbackKeys } from '@/consts/factory/feedback';
 import { mapFeedbackStatusColor } from '../../feedback/utils/map-feedback-status-color';
+import { PostReport } from '@/types/report/report';
+import { useUpdatePostReport } from '@/hooks/mutate/report/use-update-post-report';
+import { reportKeys } from '@/consts/factory/report';
 
 interface AdminReportItemProps {
     data: PostReport;
     setPostId: Dispatch<SetStateAction<null | string>>;
     setReport: Dispatch<SetStateAction<PostReport | null>>;
-    setOpenModal: Dispatch<SetStateAction<boolean | false>>;
 }
 
-const AdminReportItem = ({ data, setPostId, setReport, setOpenModal }: AdminReportItemProps) => {
+const AdminReportItem = ({ data, setPostId, setReport }: AdminReportItemProps) => {
     const { accountInfo } = useSelector((state: RootState) => state.account);
 
     const queryClient = useQueryClient();
@@ -90,35 +85,19 @@ const AdminReportItem = ({ data, setPostId, setReport, setOpenModal }: AdminRepo
                                                     height: 24,
                                                     fontSize: 12,
                                                 }}
-                                                color={mapFeedbackStatusColor('DETAIL')}
-                                            >
-                                                DETAIL
-                                            </Tag>
-                                        ),
-                                        onClick: () => setOpenModal(true),
-                                        // disabled: data?.status !== 'PENDING',
-                                    },
-                                    {
-                                        key: '2',
-                                        label: (
-                                            <Tag
-                                                style={{
-                                                    display: 'flex',
-                                                    alignItems: 'center',
-                                                    justifyContent: 'center',
-                                                    height: 24,
-                                                    fontSize: 12,
-                                                }}
                                                 color={mapFeedbackStatusColor('APPROVED')}
                                             >
                                                 APPROVED
                                             </Tag>
                                         ),
-                                        onClick: () => updatePostReport('APPROVED'),
+                                        onClick: e => {
+                                            e.domEvent.stopPropagation();
+                                            updatePostReport('APPROVED');
+                                        },
                                         disabled: data?.status !== 'PENDING',
                                     },
                                     {
-                                        key: '3',
+                                        key: '2',
                                         label: (
                                             <Tag
                                                 style={{
@@ -133,13 +112,20 @@ const AdminReportItem = ({ data, setPostId, setReport, setOpenModal }: AdminRepo
                                                 REJECTED
                                             </Tag>
                                         ),
-                                        onClick: () => updatePostReport('REJECTED'),
+                                        onClick: e => {
+                                            e.domEvent.stopPropagation();
+                                            updatePostReport('REJECTED');
+                                        },
                                         disabled: data?.status !== 'PENDING',
                                     },
                                 ],
                             }}
                         >
-                            <Button type="text" icon={<EllipsisOutlined style={{ fontSize: 20 }} />} />
+                            <Button
+                                onClick={e => e.stopPropagation()}
+                                type="text"
+                                icon={<EllipsisOutlined style={{ fontSize: 20 }} />}
+                            />
                         </Dropdown>
                     </Flex>
                 </Flex>

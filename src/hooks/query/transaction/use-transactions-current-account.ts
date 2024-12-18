@@ -1,13 +1,9 @@
-import type { FilterTransaction } from '@/types/transaction/transaction';
-
-import { keepPreviousData, useQuery } from '@tanstack/react-query';
-
 import { request } from '@/apis/request';
 import { transactionKeys } from '@/consts/factory/transaction';
-import { Transaction } from '@/types/transaction/transaction';
+import { FilterTransaction, Transaction } from '@/types/transaction/transaction';
+import { keepPreviousData, useQuery } from '@tanstack/react-query';
 
 export type FilterTransactionParams = {
-    status?: string;
     viewTransaction: boolean;
     dailyPoint: boolean;
     bonusPoint: boolean;
@@ -37,7 +33,6 @@ export const useTransactionsCurrentAccount = ({ params }: FilterTransactionProps
                 },
             },
         );
-
         return entity;
     };
 

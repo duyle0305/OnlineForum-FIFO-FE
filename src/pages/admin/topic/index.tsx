@@ -1,15 +1,3 @@
-import type { RootState } from '@/stores';
-import type { Topic } from '@/types/topic/topic';
-import type { UploadProps } from 'antd';
-import type { ColumnsType } from 'antd/es/table';
-import type { UploadFile } from 'antd/lib';
-
-import { CameraOutlined, DeleteOutlined, EditOutlined } from '@ant-design/icons';
-import { useQueryClient } from '@tanstack/react-query';
-import { Button, Card, Flex, Form, Image, Input, Modal, Select, Space, Table, Typography, Upload } from 'antd';
-import React, { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
-
 import { SecondaryButton } from '@/components/core/secondary-button';
 import { DEFAULT_PAGE, DEFAULT_PAGE_SIZE } from '@/consts/common';
 import { topicKeys } from '@/consts/factory/topic';
@@ -20,6 +8,29 @@ import { useCategoriesListing } from '@/hooks/query/category/use-category-listin
 import { useTopic, useTopicsListing } from '@/hooks/query/topic/use-topics-listing';
 import { useMessage } from '@/hooks/use-message';
 import { useUploadFile } from '@/hooks/use-upload-file';
+import { RootState } from '@/stores';
+import { Topic } from '@/types/topic/topic';
+import { CameraOutlined, DeleteOutlined, EditOutlined } from '@ant-design/icons';
+import { useQueryClient } from '@tanstack/react-query';
+import {
+    Button,
+    Card,
+    Flex,
+    Form,
+    Image,
+    Input,
+    Modal,
+    Select,
+    Space,
+    Table,
+    Typography,
+    Upload,
+    UploadProps,
+} from 'antd';
+import { ColumnsType } from 'antd/es/table';
+import { UploadFile } from 'antd/lib';
+import React, { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
 
 const { confirm } = Modal;
 
@@ -133,10 +144,8 @@ const AdminTopicPage = () => {
 
     const onRemoveFile = (file: UploadFile) => {
         const index = fileList.indexOf(file);
-
         if (index > -1) {
             const newImgUrlList = imgUrlList.slice();
-
             newImgUrlList.splice(index, 1);
             setImgUrlList(newImgUrlList);
             setFileList(fileList.filter(item => item.uid !== file.uid));

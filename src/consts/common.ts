@@ -9,3 +9,11 @@ export const DATE_FORMAT = 'DD/MM/YYYY'
 export const OTP_EXPIRE_TIME = 5 * 60 * 1000 // 5 minutes
 
 export const DOWNLOAD_POINT = 15
+
+export const SOCKET_EVENT = Object.freeze({
+    LIKE: 'LIKE',
+    DISLIKE: 'DISLIKE',
+    COMMENT: 'COMMENT',
+    NOTIFICATION: 'NOTIFICATION',
+    UPDATE_DELETE_COMMENT: 'UPDATE_DELETE_COMMENT',
+});

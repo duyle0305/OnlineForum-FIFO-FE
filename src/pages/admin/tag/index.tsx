@@ -1,10 +1,14 @@
-import type { RootState } from '@/stores';
-import type { Tag } from '@/types/tag/tag';
-import type { UploadProps } from 'antd';
-import type { Color } from 'antd/es/color-picker';
-import type { ColumnsType } from 'antd/es/table';
-import type { UploadFile } from 'antd/lib';
-
+import { SecondaryButton } from '@/components/core/secondary-button';
+import { DEFAULT_PAGE, DEFAULT_PAGE_SIZE } from '@/consts/common';
+import { tagKeys } from '@/consts/factory/tag';
+import { useCreateTag } from '@/hooks/mutate/tag/use-create-tag';
+import { useDeleteTag } from '@/hooks/mutate/tag/use-delete-tag';
+import { useUpdateTag } from '@/hooks/mutate/tag/use-update-tag';
+import { useTag, useTagsListing } from '@/hooks/query/tag/use-tags-listing';
+import { useMessage } from '@/hooks/use-message';
+import { useUploadFile } from '@/hooks/use-upload-file';
+import { RootState } from '@/stores';
+import { Tag } from '@/types/tag/tag';
 import { CameraOutlined, DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import { useQueryClient } from '@tanstack/react-query';
 import {
@@ -21,19 +25,13 @@ import {
     Table,
     Typography,
     Upload,
+    UploadProps,
 } from 'antd';
+import { Color } from 'antd/es/color-picker';
+import { ColumnsType } from 'antd/es/table';
+import { UploadFile } from 'antd/lib';
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-
-import { SecondaryButton } from '@/components/core/secondary-button';
-import { DEFAULT_PAGE, DEFAULT_PAGE_SIZE } from '@/consts/common';
-import { tagKeys } from '@/consts/factory/tag';
-import { useCreateTag } from '@/hooks/mutate/tag/use-create-tag';
-import { useDeleteTag } from '@/hooks/mutate/tag/use-delete-tag';
-import { useUpdateTag } from '@/hooks/mutate/tag/use-update-tag';
-import { useTag, useTagsListing } from '@/hooks/query/tag/use-tags-listing';
-import { useMessage } from '@/hooks/use-message';
-import { useUploadFile } from '@/hooks/use-upload-file';
 
 const { confirm } = Modal;
 
@@ -142,10 +140,8 @@ const AdminTagPage = () => {
 
     const onRemoveFile = (file: UploadFile) => {
         const index = fileList.indexOf(file);
-
         if (index > -1) {
             const newImgUrlList = imgUrlList.slice();
-
             newImgUrlList.splice(index, 1);
             setImgUrlList(newImgUrlList);
             setFileList(fileList.filter(item => item.uid !== file.uid));

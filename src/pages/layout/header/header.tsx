@@ -1,7 +1,11 @@
-import type { RootState } from '@/stores';
-
+import React, { useEffect, useState, type FC } from 'react';
 import '../index.less';
 
+import { theme as antTheme, Avatar, Badge, Dropdown, Flex, Layout, notification, Typography } from 'antd';
+import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+
+import Logo from '/public/ftech-logo.svg';
 import {
     CaretDownFilled,
     LogoutOutlined,
@@ -11,25 +15,24 @@ import {
     UserOutlined,
     WalletOutlined,
 } from '@ant-design/icons';
-import { Avatar, Badge, Dropdown, Flex, Layout, Modal, notification, theme as antTheme, Typography } from 'antd';
-import React, { type FC, useEffect, useRef, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
-
-import BackgroundPlaceholder from '/public/background-placeholder.svg';
-import Logo from '/public/ftech-logo.svg';
 import BaseInput from '@/components/core/input';
-import { DEFAULT_PAGE, DEFAULT_PAGE_SIZE } from '@/consts/common';
-import { useGetAllComments } from '@/hooks/query/comment/use-comment-by-post';
-import { useNotifications } from '@/hooks/query/notification/use-notifications';
-import { usePostsListing } from '@/hooks/query/post/use-posts-listing';
-import { useUpvoteListing } from '@/hooks/query/upvote/use-upvote-listing';
-import { useCategorySearch } from '@/hooks/query/utility/use-category-search';
-import { useDebounce } from '@/hooks/use-debounce';
-import { loggout } from '@/stores/account';
 import { PATHS } from '@/utils/paths';
-
+import BackgroundPlaceholder from '/public/background-placeholder.svg';
+import { RootState } from '@/stores';
+import { loggout } from '@/stores/account';
 import NotificationIcon from './components/notification';
+import { useDebounce } from '@/hooks/use-debounce';
+import { useNotifications } from '@/hooks/query/notification/use-notifications';
+import { useUpvoteListing } from '@/hooks/query/upvote/use-upvote-listing';
+import { useGetAllComments } from '@/hooks/query/comment/use-comment-by-post';
+import { usePostsListing } from '@/hooks/query/post/use-posts-listing';
+import { DEFAULT_PAGE, DEFAULT_PAGE_SIZE, SOCKET_EVENT } from '@/consts/common';
+import { useWebSocket } from '@/utils/socket';
+import { useQueryClient } from '@tanstack/react-query';
+import { commentKeys } from '@/consts/factory/comment';
+import { upvoteKeys } from '@/consts/factory/upvote';
+import { postKeys } from '@/consts/factory/post';
+import { bookmarkKeys } from '@/consts/factory/bookmark';
 
 const { Header } = Layout;
 
@@ -45,6 +48,8 @@ const HeaderComponent: FC<HeaderProps> = ({ collapsed, toggle }) => {
     const dispatch = useDispatch();
     const [keyword, setKeyword] = useState('  ');
     const [openSearch, setOpenSearch] = useState(false);
+    const socket = useWebSocket();
+    const queryClient = useQueryClient();
 
     const [api, contextHolder] = notification.useNotification();
 
@@ -87,7 +92,6 @@ const HeaderComponent: FC<HeaderProps> = ({ collapsed, toggle }) => {
             notifications?.length > Number(localStorage.getItem('count'))
         ) {
             let content = '';
-
             console.log(notifications?.[0]?.message);
             const notiParsed = JSON.parse(notifications?.[0]?.message);
 
@@ -121,49 +125,6 @@ const HeaderComponent: FC<HeaderProps> = ({ collapsed, toggle }) => {
         };
     }, [notifications]);
 
-    // const searchCategoryDropdownItems = searchData?.categoryList.map(category => ({
-    //     key: category.categoryId,
-    //     label: category.name,
-    //     onClick: () => {
-    //         navigate(`${PATHS.POSTS}?category=${category.categoryId}`);
-    //         resetKeyword();
-    //     },
-    // }));
-
-    // const searchTopicDropdownItems = searchData?.topicList.map(topic => ({
-    //     key: topic.topicId,
-    //     label: topic.name,
-    //     onClick: () => {
-    //         navigate(`${PATHS.POSTS}?topic=${topic.topicId}`);
-    //         resetKeyword();
-    //     },
-    // }));
-
-    // const searchPostDropdownItems = searchData?.postList.map(post => ({
-    //     key: post.postId,
-    //     label: post.title,
-    //     onClick: () => {
-    //         navigate(PATHS.POSTS);
-    //         resetKeyword();
-    //     },
-    // }));
-
-    // const searchAccountDropdownItems = searchData?.accountList.map(account => ({
-    //     key: account.accountId,
-    //     label: account.username,
-    //     onClick: () => {
-    //         navigate(PATHS.USER_PROFILE.replace(':id', account?.accountId));
-    //         resetKeyword();
-    //     },
-    // }));
-
-    // const searchDropdownItems = [
-    //     ...(searchCategoryDropdownItems || []),
-    //     ...(searchTopicDropdownItems || []),
-    //     ...(searchPostDropdownItems || []),
-    //     ...(searchAccountDropdownItems || []),
-    // ];
-
     const onLogout = async () => {
         localStorage.clear();
         dispatch(loggout());
@@ -195,6 +156,63 @@ const HeaderComponent: FC<HeaderProps> = ({ collapsed, toggle }) => {
             navigate(`${PATHS.SEARCH}?keyword=${keyword}`);
         }
     };
+
+    useEffect(() => {
+        socket.on('connect', () => {
+            console.log('connected');
+        });
+
+        socket.on(SOCKET_EVENT.COMMENT, () => {
+            queryClient.invalidateQueries({
+                queryKey: postKeys.listing(),
+            });
+            queryClient.invalidateQueries({
+                queryKey: bookmarkKeys.listing(),
+            });
+        });
+
+        socket.on(SOCKET_EVENT.UPDATE_DELETE_COMMENT, () => {
+            queryClient.invalidateQueries({
+                queryKey: postKeys.listing(),
+            });
+            queryClient.invalidateQueries({
+                queryKey: bookmarkKeys.listing(),
+            });
+        });
+
+        socket.on(SOCKET_EVENT.LIKE, () => {
+            queryClient.invalidateQueries({
+                queryKey: upvoteKeys.listing(),
+            });
+            queryClient.invalidateQueries({
+                queryKey: postKeys.listing(),
+            });
+            queryClient.invalidateQueries({
+                queryKey: bookmarkKeys.listing(),
+            });
+        });
+
+        socket.on(SOCKET_EVENT.DISLIKE, () => {
+            queryClient.invalidateQueries({
+                queryKey: upvoteKeys.listing(),
+            });
+            queryClient.invalidateQueries({
+                queryKey: postKeys.listing(),
+            });
+            queryClient.invalidateQueries({
+                queryKey: bookmarkKeys.listing(),
+            });
+        });
+
+        socket.on('disconnect', () => {
+            console.log('disconnected');
+        });
+
+        return () => {
+            socket.off('connect');
+            socket.off('disconnect');
+        };
+    }, []);
 
     return (
         <Header className="layout-page-header bg-2" style={{ backgroundColor: token.token.colorBgContainer }}>

@@ -1,30 +1,40 @@
-import type { TopicListingParams } from '@/hooks/query/topic/use-topics-listing';
-import type { RootState } from '@/stores';
-import type { OnAction } from '@/types';
-import type { UpdatePostPayload } from '@/types/post/post';
-import type { UploadFile, UploadProps } from 'antd';
-import type { FC } from 'react';
-
-import { PaperClipOutlined } from '@ant-design/icons';
-import { useQueryClient } from '@tanstack/react-query';
-import { Button, Card, Flex, Form, Image, Input, message, Modal, Select, Space, Upload } from 'antd';
-import { getStorage, ref } from 'firebase/storage';
-import { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-
-import EmojiSvg from '/public/emoji.svg';
-import GallerySvg from '/public/gallery.svg';
-import Tiptap from '@/components/tiptap/tiptap';
 import { UserInfo } from '@/components/user/user-info';
-import { DEFAULT_PAGE, DEFAULT_PAGE_SIZE } from '@/consts/common';
+import {
+    Button,
+    Card,
+    Flex,
+    Form,
+    Image,
+    Input,
+    message,
+    Modal,
+    Select,
+    Space,
+    Upload,
+    UploadFile,
+    UploadProps,
+} from 'antd';
+import GallerySvg from '/public/gallery.svg';
+import EmojiSvg from '/public/emoji.svg';
+import { OnAction } from '@/types';
+import { FC, useEffect, useState } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
 import { postKeys } from '@/consts/factory/post';
+import { UpdatePostPayload } from '@/types/post/post';
+import { useMessage } from '@/hooks/use-message';
 import { useUpdatePost } from '@/hooks/mutate/post/use-update-post';
 import { useGetPost } from '@/hooks/query/post/use-get-post';
-import { useTagsListing } from '@/hooks/query/tag/use-tags-listing';
-import { useTopicsListing } from '@/hooks/query/topic/use-topics-listing';
-import { useMessage } from '@/hooks/use-message';
+import { useSelector } from 'react-redux';
+import { RootState } from '@/stores';
 import { useUploadFile } from '@/hooks/use-upload-file';
+import { TopicListingParams, useTopicsListing } from '@/hooks/query/topic/use-topics-listing';
+import { useTagsListing } from '@/hooks/query/tag/use-tags-listing';
+import { DEFAULT_PAGE, DEFAULT_PAGE_SIZE } from '@/consts/common';
+import { useDispatch } from 'react-redux';
 import { setPost } from '@/stores/post';
+import { PaperClipOutlined } from '@ant-design/icons';
+import Tiptap from '@/components/tiptap/tiptap';
+import { getStorage, ref } from 'firebase/storage';
 
 interface UpdatePostProps {
     onCancel?: OnAction;
@@ -37,9 +47,9 @@ const initialParams: TopicListingParams = {
 
 export const UpdatePost: FC<UpdatePostProps> = ({ onCancel }) => {
     const { accountInfo } = useSelector((state: RootState) => state.account);
-
     const [form] = Form.useForm();
     const storage = getStorage();
+
     const watchContent = Form.useWatch('content', form);
 
     const dispatch = useDispatch();
@@ -104,10 +114,8 @@ export const UpdatePost: FC<UpdatePostProps> = ({ onCancel }) => {
 
     const onRemoveFile = (file: UploadFile) => {
         const index = fileList.indexOf(file);
-
         if (index > -1) {
             const newImgUrlList = imgUrlList.slice();
-
             newImgUrlList.splice(index, 1);
             setImgUrlList(newImgUrlList);
             setFileList(fileList.filter(item => item.uid !== file.uid));
@@ -120,10 +128,8 @@ export const UpdatePost: FC<UpdatePostProps> = ({ onCancel }) => {
 
     const onRemoveAnotherFile = (file: UploadFile) => {
         const index = anotherFileList.indexOf(file);
-
         if (index > -1) {
             const newImgUrlList = urlFileList.slice();
-
             newImgUrlList.splice(index, 1);
             setUrlFileList(newImgUrlList);
             setAnotherFileList(anotherFileList.filter(item => item.uid !== file.uid));
@@ -137,7 +143,6 @@ export const UpdatePost: FC<UpdatePostProps> = ({ onCancel }) => {
                 url: imgUrlList[index],
             };
         });
-
         setFileList(appendFieldFileList);
     }, [imgUrlList]);
 
@@ -274,8 +279,6 @@ export const UpdatePost: FC<UpdatePostProps> = ({ onCancel }) => {
                             >
                                 <Button type="text" icon={<PaperClipOutlined />} />
                             </Upload>
-
-                            <Button type="text" icon={<img src={EmojiSvg} />} />
                         </Space>
 
                         <Space>

@@ -18,6 +18,7 @@ import { RootState } from '@/stores';
 import { useMessage } from '@/hooks/use-message';
 import ReportReason from '@/pages/user-profile/components/report-reason';
 import PageBreadcrumbs from '@/components/core/page-breadcrumbs';
+import { useCategoriesListing } from '@/hooks/query/category/use-category-listing';
 
 interface PostWrapperProps {
     children: React.ReactNode;
@@ -43,6 +44,7 @@ export const PostWrapper: FC<PostWrapperProps> = ({ children, showHeader = true 
 
     const [openDraft, setOpenDraft] = useState<boolean>(false);
     const [selectedReason, setSelectedReason] = useState<ReportAccountReasons>();
+    const { data: categories } = useCategoriesListing({ params: initialParams });
 
     const { mutate: createReport, isPending: isPendingCreateReport } = useCreateReportPost(id || '');
     const { data: topics } = useTopicsListing({
@@ -98,7 +100,11 @@ export const PostWrapper: FC<PostWrapperProps> = ({ children, showHeader = true 
             {showHeader && (
                 <>
                     <Card>
-                        <PageBreadcrumbs />
+                        <PageBreadcrumbs
+                            title={
+                                categories?.find(category => category.categoryId === searchParams.get('category'))?.name
+                            }
+                        />
 
                         <Divider />
 

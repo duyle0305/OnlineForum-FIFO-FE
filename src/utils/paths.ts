@@ -16,7 +16,7 @@ export const PATHS = {
     FEEDBACKS: '/feedback',
     ADMIN_FEEDBACKS: '/admin/feedback-manager',
     USER_PROFILE: '/user-profile/:id',
-    ADMIN_REPORTS: '/admin/reports',
+    ADMIN_REPORTS: '/reports',
     SEARCH: '/search',
     ABOUT: '/about',
     CONTENT_POLICY: '/content-policy',

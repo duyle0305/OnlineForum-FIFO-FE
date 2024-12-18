@@ -1,18 +1,17 @@
-import type { CategoryListingParams } from '@/hooks/query/category/use-category-listing';
-import type { RootState } from '@/stores';
-import type { FC } from 'react';
-
+import { FC, useEffect } from 'react';
 import { Empty, Spin } from 'antd';
-import { useEffect } from 'react';
-import { useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
-
+import {
+    CategoryListingParams,
+    useCategoriesListing,
+    useCategoriesListingForStaff,
+} from '@/hooks/query/category/use-category-listing';
 import { DEFAULT_PAGE, DEFAULT_PAGE_SIZE } from '@/consts/common';
-import { useCategoriesListing, useCategoriesListingForStaff } from '@/hooks/query/category/use-category-listing';
-import { PATHS } from '@/utils/paths';
-
 import { PostSummary } from './components/post-summary';
 import { PostWrapper } from './layout/post-wrapper';
+import { useSelector } from 'react-redux';
+import { RootState } from '@/stores';
+import { PATHS } from '@/utils/paths';
+import { useNavigate } from 'react-router-dom';
 
 const initialParams: CategoryListingParams = {
     page: DEFAULT_PAGE,

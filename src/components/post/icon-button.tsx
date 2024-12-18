@@ -1,6 +1,7 @@
-import { OnAction } from '@/types';
+import type { OnAction } from '@/types';
+import type { FC } from 'react';
+
 import { Button, Space } from 'antd';
-import { FC } from 'react';
 
 interface IconButtonProps {
     icon: React.ReactNode;

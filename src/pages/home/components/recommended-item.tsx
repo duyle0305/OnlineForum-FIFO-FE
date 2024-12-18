@@ -1,21 +1,20 @@
-import type { RootState } from '@/stores';
-import type { Account } from '@/types/account';
-import type { Follow } from '@/types/follow';
-
-import { MinusOutlined, PlusOutlined } from '@ant-design/icons';
-import { useQueryClient } from '@tanstack/react-query';
 import { Button, Flex, Image, Typography } from 'antd';
-import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
-
 import AmdSvg from '/public/amd.svg';
-import { followKeys } from '@/consts/factory/follow';
+import { MinusOutlined, PlusOutlined } from '@ant-design/icons';
+import { Account } from '@/types/account';
+import { Follow } from '@/types/follow';
+import { useSelector } from 'react-redux';
+import { RootState } from '@/stores';
 import { useCreateFollow } from '@/hooks/mutate/follow/use-create-follow';
 import { useDeleteFollow } from '@/hooks/mutate/follow/use-delete-follow';
+import { useQueryClient } from '@tanstack/react-query';
+import { followKeys } from '@/consts/factory/follow';
 import { useToggleFollow } from '@/hooks/mutate/follow/use-toggle-follow';
 import { useMessage } from '@/hooks/use-message';
-import { setAccountState } from '@/stores/account';
+import { useNavigate } from 'react-router-dom';
 import { PATHS } from '@/utils/paths';
+import { useDispatch } from 'react-redux';
+import { setAccountState } from '@/stores/account';
 
 interface RecommendedItemProps {
     account: Account;
@@ -51,19 +50,14 @@ export const RecommendedItem = ({ account, follows }: RecommendedItemProps) => {
     };
 
     return (
-        <Flex align="flex-start" gap={10} justify="space-between">
-            <Flex
-                gap={10}
-                style={{
-                    cursor: 'pointer',
-                }}
-            >
+        <Flex align="flex-start" gap={10} justify="space-between" onClick={() => navigate(PATHS.RECOMMENDATIONS)}>
+            <Flex gap={10}>
                 <Image
                     style={{
                         borderRadius: 10,
                         width: 58,
                         height: 58,
-                        objectFit: 'contain',
+                        objectFit: 'cover',
                         boxShadow: '0px 3px 4px 0px #FA89240F',
                     }}
                     src={account?.avatar || AmdSvg}

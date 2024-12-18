@@ -1,5 +1,4 @@
 import { Avatar, Flex, Form, Input } from 'antd';
-import React, { useState } from 'react';
 import PostCommentList from './post-comment-list';
 import { CommentCreatePayload } from '@/types/comment/comment';
 import { useCreateComment } from '@/hooks/mutate/comment/use-create-comment';
@@ -7,10 +6,11 @@ import { RootState } from '@/stores';
 import { useSelector } from 'react-redux';
 import { SecondaryButton } from '../core/secondary-button';
 import AvatarPlaceholder from '/public/avatar-placeholder.svg';
-import { useDeleteComment } from '@/hooks/mutate/comment/use-delete-comment';
 import { useQueryClient } from '@tanstack/react-query';
 import { commentKeys } from '@/consts/factory/comment';
-import { bookmarkKeys } from '@/consts/factory/bookmark';
+import { useEffect } from 'react';
+import { useWebSocket } from '@/utils/socket';
+import { SOCKET_EVENT } from '@/consts/common';
 
 interface PostCommentProps {
     postId: string;
@@ -18,6 +18,7 @@ interface PostCommentProps {
 }
 
 const PostComment = ({ postId, isShown }: PostCommentProps) => {
+    const socket = useWebSocket();
     const [form] = Form.useForm();
 
     const queryClient = useQueryClient();
@@ -25,18 +26,27 @@ const PostComment = ({ postId, isShown }: PostCommentProps) => {
 
     const { mutate: createComment, isPending: isPendingCreateComment } = useCreateComment();
 
+    useEffect(() => {
+        socket.on(SOCKET_EVENT.COMMENT, () => {
+            queryClient.invalidateQueries({
+                queryKey: commentKeys.byPost(postId),
+            });
+        });
+
+        return () => {
+            socket.off(SOCKET_EVENT.COMMENT);
+        };
+    }, []);
+
     const onFinish = (values: CommentCreatePayload) => {
         createComment(
             { ...values, postId },
             {
                 onSuccess: () => {
                     form.resetFields();
-                    queryClient.invalidateQueries({
-                        queryKey: commentKeys.byPost(postId),
-                    });
-                    queryClient.invalidateQueries({
-                        queryKey: bookmarkKeys.listing(),
-                    });
+                    // queryClient.invalidateQueries({
+                    //     queryKey: commentKeys.byPost(postId),
+                    // });
                 },
             },
         );

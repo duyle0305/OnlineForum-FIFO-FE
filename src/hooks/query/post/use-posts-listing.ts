@@ -1,11 +1,8 @@
-import type { PaginationParams } from '@/types';
-import type { Post, PostStatus } from '@/types/post/post';
-
-import { keepPreviousData, useQuery } from '@tanstack/react-query';
-
 import axiosInstance, { request } from '@/apis/request';
 import { postKeys } from '@/consts/factory/post';
-import { Response } from '@/types';
+import { PaginationParams, Response } from '@/types';
+import { Post, PostStatus } from '@/types/post/post';
+import { keepPreviousData, useQuery } from '@tanstack/react-query';
 
 export type PostListingParams = PaginationParams & {
     topicId?: string;
@@ -59,16 +56,11 @@ export const useDraftsListing = ({ params }: PostListingProps) => {
 
 export const usePostsAnotherAccountListing = (id: string) => {
     const fetchPosts = async (): Promise<Post[]> => {
-        const { entity } = await request<Post[]>(
-            'get',
-            `/post/getall/other-user/${id}`,
-            {},
-            {
-                paramsSerializer: {
-                    indexes: null,
-                },
+        const { entity } = await request<Post[]>('get', `/post/getall/other-user/${id}`, {}, {
+            paramsSerializer: {
+                indexes: null,
             },
-        );
+        });
 
         return entity;
     };
