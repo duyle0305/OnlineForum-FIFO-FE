@@ -1,13 +1,16 @@
-import BaseMenu from '@/components/core/menu';
+import type { GetProp, MenuProps } from 'antd';
+import type { FC } from 'react';
+
 import Icon from '@ant-design/icons';
-import { Flex, GetProp, MenuProps, Space, Tooltip, Typography } from 'antd';
-import AppleSvg from '/public/apple.svg';
+import { Flex, Space, Tooltip, Typography } from 'antd';
+import { useNavigate } from 'react-router-dom';
+
 import AndroidSvg from '/public/android.svg';
+import AppleSvg from '/public/apple.svg';
 import ChatbotSvg from '/public/chatbot.svg';
 import ToolKitSvg from '/public/toolkit.svg';
-import { FC } from 'react';
+import BaseMenu from '@/components/core/menu';
 import { usePopularTopics } from '@/hooks/query/topic/use-popular-topic';
-import { useNavigate } from 'react-router-dom';
 import { PATHS } from '@/utils/paths';
 
 type MenuItem = GetProp<MenuProps, 'items'>[number];
@@ -27,7 +30,19 @@ export const PopularMenu = () => {
                     category={topic?.category?.name || ''}
                 />
             ),
-            icon: <Icon component={() => <img src={topic?.imageUrl} alt={topic?.name} />} />,
+            icon: (
+                <Icon
+                    component={() => (
+                        <img
+                            src={topic?.imageUrl}
+                            alt={topic?.name}
+                            style={{
+                                objectFit: 'cover',
+                            }}
+                        />
+                    )}
+                />
+            ),
             onClick: () => navigate(`${PATHS.POSTS}?category=${topic?.category?.categoryId}&topicId=${topic?.topicId}`),
         })) || [];
 

@@ -1,29 +1,36 @@
-import BaseMenu from '@/components/core/menu';
+import type { RootState } from '@/stores';
+import type { GetProp, MenuProps } from 'antd';
+
 import Icon from '@ant-design/icons';
-import { GetProp, MenuProps } from 'antd';
-import WarningSvg from '/public/warning.svg';
-import QuestionMarkSvg from '/public/question-mark.svg';
-import OpenBookSvg from '/public/open-book.svg';
-import RewardSvg from '/public/reward.svg';
-import FeedbackSvg from '/public/feedback.svg';
-import { useNavigate } from 'react-router-dom';
-import { PATHS } from '@/utils/paths';
+import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
-import { RootState } from '@/stores';
+import { useLocation, useNavigate } from 'react-router-dom';
+
+import BaseMenu from '@/components/core/menu';
+import { PATHS } from '@/utils/paths';
+
+import AboutSvg from '../../../assets/icons/About.svg';
+import ContentPolicySvg from '../../../assets/icons/Content-Policy.svg';
+import FeedbackSvg from '../../../assets/icons/Feedback.svg';
+import HelpSvg from '../../../assets/icons/Help.svg';
+import ReportSvg from '../../../assets/icons/Report.svg';
+import RewardSvg from '../../../assets/icons/Reward.svg';
 
 type MenuItem = GetProp<MenuProps, 'items'>[number];
 
 export const ResourceMenu = () => {
     const { accountInfo } = useSelector((state: RootState) => state.account);
     const navigate = useNavigate();
+    const location = useLocation();
 
     const toReward = () => {
-        navigate(PATHS.REWARDS);
+        navigate(PATHS.ADMIN_REWARDS);
     };
 
     const toFeedback = () => {
         if (accountInfo?.role?.name === 'STAFF' || accountInfo?.role?.name === 'ADMIN') {
             navigate(PATHS.ADMIN_FEEDBACKS);
+
             return;
         }
 
@@ -46,44 +53,64 @@ export const ResourceMenu = () => {
         navigate(PATHS.HELP);
     };
 
+    useEffect(() => {
+        const selectedItems = document.getElementsByClassName('ant-menu-item-selected');
+
+        Array.from(selectedItems).forEach(item => {
+            if (item.getAttribute('title') !== location.pathname) {
+                item.classList.remove('ant-menu-item-selected');
+            }
+        });
+    }, [location]);
+
     const items: MenuItem[] = [
         {
-            key: '1',
-            icon: <Icon component={() => <img src={WarningSvg} alt="warning" />} />,
+            key: PATHS.ABOUT,
+            icon: <Icon component={() => <img src={AboutSvg} alt="warning" />} />,
             label: 'About',
             onClick: toAbout,
+            title: PATHS.ABOUT,
         },
         {
-            key: '2',
-            icon: <Icon component={() => <img src={QuestionMarkSvg} alt="question-mark" />} />,
+            key: PATHS.HELP,
+            icon: <Icon component={() => <img src={HelpSvg} alt="question-mark" />} />,
             label: 'Help',
             onClick: toHelp,
+            title: PATHS.HELP,
         },
         {
-            key: '3',
-            icon: <Icon component={() => <img src={OpenBookSvg} alt="open-book" />} />,
+            key: PATHS.CONTENT_POLICY,
+            icon: <Icon component={() => <img src={ContentPolicySvg} alt="open-book" />} />,
             label: 'Content Policy',
             onClick: toContentPolicy,
+            title: PATHS.CONTENT_POLICY,
         },
+        ...(accountInfo?.role?.name === 'STAFF'
+            ? [
+                  {
+                      key: PATHS.REWARDS,
+                      icon: <Icon component={() => <img src={RewardSvg} alt="reward" />} />,
+                      label: 'Reward',
+                      onClick: toReward,
+                      title: PATHS.REWARDS,
+                  },
+              ]
+            : []),
         {
-            key: '4',
-            icon: <Icon component={() => <img src={RewardSvg} alt="reward" />} />,
-            label: 'Reward',
-            onClick: toReward,
-        },
-        {
-            key: '5',
+            key: PATHS.FEEDBACKS,
             icon: <Icon component={() => <img src={FeedbackSvg} alt="feedback" />} />,
             label: 'Feedback',
             onClick: toFeedback,
+            title: PATHS.FEEDBACKS,
         },
         ...(accountInfo?.role?.name === 'STAFF' || accountInfo?.role?.name === 'ADMIN'
             ? [
                   {
-                      key: '6',
-                      icon: <Icon component={() => <img src={FeedbackSvg} alt="feedback" />} />,
+                      key: PATHS.ADMIN_REPORTS,
+                      icon: <Icon component={() => <img src={ReportSvg} alt="feedback" />} />,
                       label: 'Report',
                       onClick: toReport,
+                      title: PATHS.ADMIN_REPORTS,
                   },
               ]
             : []),

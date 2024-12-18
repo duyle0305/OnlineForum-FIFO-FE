@@ -1,3 +1,11 @@
+import type { FC } from 'react';
+
+import { RightOutlined } from '@ant-design/icons';
+import { Breadcrumb, Button, ConfigProvider, Layout } from 'antd';
+import React, { useState } from 'react';
+import { Link, Outlet, useNavigate } from 'react-router-dom';
+
+import TagXSvg from '/public/tag-x.svg';
 import { themeConfig } from '@/consts/token';
 import { useProfile } from '@/hooks/query/auth/use-profile';
 import { useWallet } from '@/hooks/query/auth/use-wallet';
@@ -11,11 +19,6 @@ import { EventsWrapper } from '@/pages/home/layout/events-wrapper';
 import { MenuWrapper } from '@/pages/home/layout/menu-wrapper';
 import { PageWrapper } from '@/pages/home/layout/page-wrapper';
 import HeaderComponent from '@/pages/layout/header/header';
-import { RightOutlined } from '@ant-design/icons';
-import { Breadcrumb, Button, ConfigProvider, Layout } from 'antd';
-import React, { FC, useState } from 'react';
-import { Link, Outlet, useNavigate } from 'react-router-dom';
-import TagXSvg from '/public/tag-x.svg';
 
 interface MainLayoutProps {
     children?: React.ReactNode;

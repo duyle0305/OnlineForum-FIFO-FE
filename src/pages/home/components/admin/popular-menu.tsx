@@ -1,4 +1,6 @@
-import BaseMenu from '@/components/core/menu';
+import type { GetProp, MenuProps } from 'antd';
+import type { FC } from 'react';
+
 import Icon, {
     FlagOutlined,
     MoneyCollectOutlined,
@@ -6,14 +8,15 @@ import Icon, {
     UnorderedListOutlined,
     UserOutlined,
 } from '@ant-design/icons';
-import { Flex, GetProp, MenuProps, Space, Tooltip, Typography } from 'antd';
-import AppleSvg from '/public/apple.svg';
+import { Flex, Space, Tooltip, Typography } from 'antd';
+import { useNavigate } from 'react-router-dom';
+
 import AndroidSvg from '/public/android.svg';
+import AppleSvg from '/public/apple.svg';
 import ChatbotSvg from '/public/chatbot.svg';
 import ToolKitSvg from '/public/toolkit.svg';
-import { FC } from 'react';
+import BaseMenu from '@/components/core/menu';
 import { usePopularTopics } from '@/hooks/query/topic/use-popular-topic';
-import { useNavigate } from 'react-router-dom';
 import { PATHS } from '@/utils/paths';
 
 type MenuItem = GetProp<MenuProps, 'items'>[number];
@@ -41,12 +44,12 @@ export const PopularMenuAdmin = () => {
             icon: <TagOutlined />,
             onClick: () => navigate(PATHS.ADMIN_TAGS),
         },
-        {
-            key: '4',
-            label: 'Reward',
-            icon: <MoneyCollectOutlined />,
-            onClick: () => navigate(PATHS.ADMIN_REWARDS),
-        },
+        // {
+        //     key: '4',
+        //     label: 'Reward',
+        //     icon: <MoneyCollectOutlined />,
+        //     onClick: () => navigate(PATHS.ADMIN_REWARDS),
+        // },
         {
             key: '5',
             label: 'Users',

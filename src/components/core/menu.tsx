@@ -1,6 +1,7 @@
+import type { MenuProps } from 'antd';
 import type { FC } from 'react';
 
-import { Menu, MenuProps } from 'antd';
+import { Menu } from 'antd';
 
 interface BaseMenuProps extends MenuProps {}
 

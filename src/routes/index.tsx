@@ -1,16 +1,18 @@
-import { lazy, type FC } from 'react';
+import type { RootState } from '@/stores';
 import type { RouteObject } from 'react-router';
 
-import { historyNavigation } from '@/utils/common';
+import { type FC, lazy } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useLocation, useNavigate, useRoutes } from 'react-router-dom';
-import WrapperRouteComponent from './config';
-import { PATHS } from '@/utils/paths';
+
+import AdminLayout from '@/layout/admin-layout';
 import MainLayout from '@/layout/main-layout';
-import { RootState } from '@/stores';
 import VerifyOtpResetPasswordPage from '@/pages/auth/forgot-password/verify-otp';
 import PostDetailDraftPage from '@/pages/post-detail/post-detail-draft';
-import AdminLayout from '@/layout/admin-layout';
+import { historyNavigation } from '@/utils/common';
+import { PATHS } from '@/utils/paths';
+
+import WrapperRouteComponent from './config';
 
 const SignInPage = lazy(() => import('@/pages/auth/signin'));
 const SignUpPage = lazy(() => import('@/pages/auth/signup'));
@@ -177,7 +179,7 @@ const RenderRouter: FC = () => {
                 {
                     path: PATHS.ADMIN_DASHBOARD,
                     element: <WrapperRouteComponent element={<AdminDashboardPage />} title="Admin Dashboard" />,
-                }
+                },
             ],
         },
         {
@@ -211,6 +213,7 @@ const RenderRouter: FC = () => {
     ];
 
     const element = useRoutes(routes);
+
     return element;
 };
 
