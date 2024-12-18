@@ -1,10 +1,8 @@
 import { Card, Divider, Empty, Flex } from 'antd';
 import React from 'react';
-
+import EventItem from './components/event-item';
 import PageBreadcrumbs from '@/components/core/page-breadcrumbs';
 import { useEventListing } from '@/hooks/query/event/use-event-listing';
-
-import EventItem from './components/event-item';
 
 const EventsPage = () => {
     const { data: events } = useEventListing();

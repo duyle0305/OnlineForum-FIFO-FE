@@ -1,24 +1,21 @@
-import type { RootState } from '@/stores';
-
-import { useQueryClient } from '@tanstack/react-query';
-import { Divider, Empty, Flex, Image, Modal, Typography } from 'antd';
-import dayjs from 'dayjs';
-import { useState } from 'react';
-import { useSelector } from 'react-redux';
-import { Navigate, useNavigate } from 'react-router-dom';
-
-import PlaceholderSvg from '/public/placeholder.svg';
-import { SecondaryButton } from '@/components/core/secondary-button';
-import { FULL_TIME_FORMAT } from '@/consts/common';
-import { redeemKeys } from '@/consts/factory/redeem';
-import { walletKeys } from '@/consts/factory/wallet';
-import { useCreateRedeem } from '@/hooks/mutate/redeem/use-create-redeem';
 import { useRedeemDocuments, useRewardDetail } from '@/hooks/query/redeem/use-redeem-documents';
-import { useGetWalletByAccount } from '@/hooks/query/wallet/use-get-wallet-by-account';
-import { useMessage } from '@/hooks/use-message';
-import { PATHS } from '@/utils/paths';
-
+import { Divider, Empty, Flex, Image, Modal, Typography } from 'antd';
 import RewardItem from '../components/reward-item';
+import { useState } from 'react';
+import { SecondaryButton } from '@/components/core/secondary-button';
+import PlaceholderSvg from '/public/placeholder.svg';
+import { useMessage } from '@/hooks/use-message';
+import { useCreateRedeem } from '@/hooks/mutate/redeem/use-create-redeem';
+import { useGetWalletByAccount } from '@/hooks/query/wallet/use-get-wallet-by-account';
+import { RootState } from '@/stores';
+import { useSelector } from 'react-redux';
+import { walletKeys } from '@/consts/factory/wallet';
+import { redeemKeys } from '@/consts/factory/redeem';
+import { useQueryClient } from '@tanstack/react-query';
+import dayjs from 'dayjs';
+import { FULL_TIME_FORMAT } from '@/consts/common';
+import { PATHS } from '@/utils/paths';
+import { useNavigate } from 'react-router-dom';
 
 const { confirm } = Modal;
 
@@ -35,7 +32,7 @@ const RewardList = () => {
     const queryClient = useQueryClient();
 
     const { mutate: createRedeem, isPending: isPendingCreateRedeem } = useCreateRedeem();
-
+    
     const navigate = useNavigate();
 
     const handleCreateRedeem = () => {
@@ -99,7 +96,7 @@ const RewardList = () => {
                         },
                         onError: err => {
                             error(err.message);
-                            navigate(PATHS.DEPOSIT);
+                            navigate(PATHS.DEPOSIT)
                         },
                     },
                 );

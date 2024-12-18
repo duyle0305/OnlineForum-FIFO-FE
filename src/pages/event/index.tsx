@@ -1,12 +1,11 @@
 import { Card, Col, Divider, Flex, Image, Row, Space, Typography } from 'antd';
 import React from 'react';
-import { useParams } from 'react-router-dom';
-
 import BackgroundPlaceholder from '/public/background-placeholder.svg';
 import PageBreadcrumbs from '@/components/core/page-breadcrumbs';
-import { DATE_FORMAT } from '@/consts/common';
+import { useParams } from 'react-router-dom';
 import { useGetEvent } from '@/hooks/query/event/use-event-detail';
 import dayjsConfig from '@/utils/dayjs';
+import { DATE_FORMAT } from '@/consts/common';
 
 const EventPage = () => {
     const { id } = useParams();
@@ -38,7 +37,7 @@ const EventPage = () => {
                             <Space direction="vertical" size="small">
                                 <Typography.Title level={5}>Date</Typography.Title>
                                 <Typography.Text>
-                                    {dayjsConfig(event?.startDate).format(DATE_FORMAT)} - {''}
+                                    {dayjsConfig(event?.startDate).format(DATE_FORMAT)}-
                                     {dayjsConfig(event?.endDate).format(DATE_FORMAT)}
                                 </Typography.Text>
                             </Space>
@@ -54,12 +53,7 @@ const EventPage = () => {
                         <Col span={12}>
                             <Space direction="vertical" size="small">
                                 <Typography.Title level={5}>Event Link</Typography.Title>
-                                <Typography.Text
-                                    style={{ textDecoration: 'underline', cursor: 'pointer' }}
-                                    onClick={() => window.open(event?.link)}
-                                >
-                                    {event?.title}
-                                </Typography.Text>
+                                <Typography.Text style={{ textDecoration: 'underline' }}>{event?.link}</Typography.Text>
                             </Space>
                         </Col>
 
@@ -76,7 +70,9 @@ const EventPage = () => {
 
                 <Flex vertical gap={10}>
                     <Typography.Title level={4}>About Event</Typography.Title>
-                    <Typography.Paragraph>{event?.content}</Typography.Paragraph>
+                    <Typography.Paragraph>
+                       {event?.content}
+                    </Typography.Paragraph>
                 </Flex>
             </Flex>
         </Card>

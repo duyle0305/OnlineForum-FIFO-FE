@@ -1,17 +1,14 @@
-import type { UserListingParams } from '@/hooks/query/user/use-user-listing';
-import type { Account } from '@/types/account';
-import type { ColumnsType } from 'antd/es/table';
-
-import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
-import { Badge, Button, Card, Flex, Input, Space, Table, Tag, Typography } from 'antd';
-import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-
 import BaseInput from '@/components/core/input';
 import { DEFAULT_PAGE, DEFAULT_PAGE_SIZE } from '@/consts/common';
-import { useUsersListing } from '@/hooks/query/user/use-user-listing';
+import { UserListingParams, useUsersListing } from '@/hooks/query/user/use-user-listing';
 import { useDebounce } from '@/hooks/use-debounce';
+import { Account } from '@/types/account';
 import { PATHS } from '@/utils/paths';
+import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
+import { Badge, Button, Card, Flex, Input, Space, Table, Tag, Typography } from 'antd';
+import { ColumnsType } from 'antd/es/table';
+import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const AdminUserPage = () => {
     const navigate = useNavigate();
@@ -39,7 +36,7 @@ const AdminUserPage = () => {
                         cursor: 'pointer',
                     }}
                     onClick={() => {
-                        navigate(PATHS.USER_PROFILE.replace(':id', record.accountId));
+                       navigate(PATHS.USER_PROFILE.replace(':id', record.accountId));
                     }}
                 >
                     {record.username}

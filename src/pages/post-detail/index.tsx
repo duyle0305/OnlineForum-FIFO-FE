@@ -4,7 +4,7 @@ import { useGetPost } from '@/hooks/query/post/use-get-post';
 import { RootState } from '@/stores';
 import { PostModalType, setPost } from '@/stores/post';
 import { Button, Card, Divider, Flex, Modal } from 'antd';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
@@ -13,8 +13,14 @@ import { ReportAccountReasons, reportAccountReasons } from '@/types/report/repor
 import { useMessage } from '@/hooks/use-message';
 import { useCreateReportPost } from '@/hooks/mutate/report/use-create-report';
 import { UpdatePost } from '../post/components/update-post';
+import { useWebSocket } from '@/utils/socket';
+import { SOCKET_EVENT } from '@/consts/common';
+import { queryClient } from '@/components/provider/query-provider';
+import { commentKeys } from '@/consts/factory/comment';
+import { postKeys } from '@/consts/factory/post';
 
 const PostDetailPage = () => {
+    const socket = useWebSocket();
     const { id } = useParams();
 
     const dispatch = useDispatch();
@@ -45,6 +51,24 @@ const PostDetailPage = () => {
             },
         });
     };
+
+    useEffect(() => {
+        socket.on(SOCKET_EVENT.LIKE, () => {
+            queryClient.invalidateQueries({
+                queryKey: postKeys.get(id || ''),
+            });
+        });
+
+        socket.on(SOCKET_EVENT.DISLIKE, () => {
+            queryClient.invalidateQueries({
+                queryKey: postKeys.get(id || ''),
+            });
+        });
+
+        return () => {
+            socket.off(SOCKET_EVENT.COMMENT);
+        };
+    }, []);
 
     return (
         <Flex vertical gap={20}>

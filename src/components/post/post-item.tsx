@@ -1,9 +1,20 @@
-import type { RootState } from '@/stores';
-import type { OnAction } from '@/types';
-import type { Post } from '@/types/post/post';
-import type { FormListFieldData } from 'antd';
-import type { FC } from 'react';
-
+import {
+    Button,
+    Card,
+    Checkbox,
+    Divider,
+    Dropdown,
+    Flex,
+    Form,
+    FormListFieldData,
+    Image,
+    Modal,
+    Spin,
+    Tag,
+    Typography,
+} from 'antd';
+import { UserInfo } from '../user/user-info';
+import { PostTag } from './post-tag';
 import {
     BarChartOutlined,
     CommentOutlined,
@@ -22,34 +33,33 @@ import {
     ShareAltOutlined,
     TagOutlined,
 } from '@ant-design/icons';
-import { useQueryClient } from '@tanstack/react-query';
-import { Button, Card, Checkbox, Divider, Dropdown, Flex, Form, Image, Modal, Spin, Tag, Typography } from 'antd';
-import { useEffect, useState } from 'react';
-import { FaBookmark, FaRegBookmark } from 'react-icons/fa';
-import { useDispatch, useSelector } from 'react-redux';
-import { Link, useLocation, useNavigate, useParams, useSearchParams } from 'react-router-dom';
-
-import { DOWNLOAD_POINT } from '@/consts/common';
-import { bookmarkKeys } from '@/consts/factory/bookmark';
-import { postKeys } from '@/consts/factory/post';
-import { upvoteKeys } from '@/consts/factory/upvote';
-import { useToggleBookmark } from '@/hooks/mutate/bookmark/use-toggle-bookmark';
-import { useDeleteDraftPost, useDeletePost } from '@/hooks/mutate/post/use-delete-post';
-import { useToggleUpvote } from '@/hooks/mutate/upvote/use-toggle-upvote';
-import { useBookmarkListing } from '@/hooks/query/bookmark/use-bookmark-listing';
-import { usePostDownload } from '@/hooks/query/post/use-post-download';
-import { useUpvoteListing } from '@/hooks/query/upvote/use-upvote-listing';
-import { useGetWalletByAccount } from '@/hooks/query/wallet/use-get-wallet-by-account';
-import { useMessage } from '@/hooks/use-message';
-import { setPost } from '@/stores/post';
-import dayjsConfig from '@/utils/dayjs';
-import { PATHS } from '@/utils/paths';
-
-import { UserInfo } from '../user/user-info';
 import { IconButton } from './icon-button';
+import { useDispatch } from 'react-redux';
+import { setPost } from '@/stores/post';
+import { useDeleteDraftPost, useDeletePost } from '@/hooks/mutate/post/use-delete-post';
+import { Post } from '@/types/post/post';
+import { FC, useEffect, useState } from 'react';
+import dayjsConfig from '@/utils/dayjs';
+import { Link, useLocation, useNavigate, useParams, useSearchParams } from 'react-router-dom';
+import { useQueryClient } from '@tanstack/react-query';
+import { postKeys } from '@/consts/factory/post';
+import { useMessage } from '@/hooks/use-message';
+import { useSelector } from 'react-redux';
+import { RootState } from '@/stores';
+import { useToggleUpvote } from '@/hooks/mutate/upvote/use-toggle-upvote';
+import { useUpvoteListing } from '@/hooks/query/upvote/use-upvote-listing';
+import { upvoteKeys } from '@/consts/factory/upvote';
 import PostComment from './post-comment';
-import { PostTag } from './post-tag';
+import { useToggleBookmark } from '@/hooks/mutate/bookmark/use-toggle-bookmark';
+import { FaRegBookmark, FaBookmark } from 'react-icons/fa';
+import { useBookmarkListing } from '@/hooks/query/bookmark/use-bookmark-listing';
+import { bookmarkKeys } from '@/consts/factory/bookmark';
+import { PATHS } from '@/utils/paths';
+import { usePostDownload } from '@/hooks/query/post/use-post-download';
 import ToggleTruncateTextTypography from './toggle-truncate-text-typography';
+import { DOWNLOAD_POINT } from '@/consts/common';
+import { useGetWalletByAccount } from '@/hooks/query/wallet/use-get-wallet-by-account';
+import { OnAction } from '@/types';
 
 const { confirm } = Modal;
 
@@ -73,7 +83,6 @@ export const useDownloadZip = (data: string, fileName: string, extension: string
             // Create blob link to download
             const url = window.URL.createObjectURL(new Blob([data], { type: 'application/gzip;charset=utf-8' }));
             const link = document.createElement('a');
-
             link.href = url;
             link.setAttribute('download', `${fileName}.${extension}`);
 
@@ -189,7 +198,7 @@ export const PostItem: FC<PostItemProps> = ({
                               });
                               success('Post deleted successfully!');
                               dispatch(setPost({ modal: { open: false, type: 'draft' } }));
-                              navigate(-1);
+                              navigate(-1)
                           },
                           onError: err => {
                               error(err?.message ?? 'Failed to delete post');
@@ -215,15 +224,7 @@ export const PostItem: FC<PostItemProps> = ({
     const handleUpvote = (id: string) => {
         upvote(id, {
             onSuccess: () => {
-                // queryClient.invalidateQueries({
-                //     queryKey: postKeys.listing(),
-                // });
-                queryClient.invalidateQueries({
-                    queryKey: upvoteKeys.listing(),
-                });
-                queryClient.invalidateQueries({
-                    queryKey: bookmarkKeys.listing(),
-                });
+              
             },
         });
     };
@@ -272,7 +273,7 @@ export const PostItem: FC<PostItemProps> = ({
     return (
         <Card
             style={{ cursor: 'pointer' }}
-            onClick={() => (onClick ? onClick() : navigate(PATHS.POST_DETAIL.replace(':id', data?.postId)))}
+            onClick={() => onClick ? onClick() : navigate(PATHS.POST_DETAIL.replace(':id', data?.postId))}
         >
             <Flex vertical gap={8}>
                 <Flex justify="space-between" align="flex-start">

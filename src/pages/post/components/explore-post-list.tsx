@@ -1,11 +1,14 @@
-import { DEFAULT_PAGE, DEFAULT_PAGE_SIZE } from '@/consts/common';
-import { usePostsListing } from '@/hooks/query/post/use-posts-listing';
-import { PaginationParams } from '@/types';
-import { PostWrapper } from '../layout/post-wrapper';
-import { PostItem } from '@/components/post/post-item';
+import type { PaginationParams } from '@/types';
+
 import { Empty } from 'antd';
 import { useSearchParams } from 'react-router-dom';
+
+import { PostItem } from '@/components/post/post-item';
+import { DEFAULT_PAGE, DEFAULT_PAGE_SIZE } from '@/consts/common';
+import { usePostsListing } from '@/hooks/query/post/use-posts-listing';
 import { PostStatus } from '@/types/post/post';
+
+import { PostWrapper } from '../layout/post-wrapper';
 
 export const ExplorePostList = () => {
     const initialParams: PaginationParams = {

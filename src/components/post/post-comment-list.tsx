@@ -1,20 +1,24 @@
-import { useCommentByPost } from '@/hooks/query/comment/use-comment-by-post';
-import { CommentCreatePayload, CreateReplyPayload, TComment } from '@/types/comment/comment';
+import type { RootState } from '@/stores';
+import type { CommentCreatePayload, CreateReplyPayload, TComment } from '@/types/comment/comment';
+
 import { Comment } from '@ant-design/compatible';
-import { Button, Dropdown, Flex, Form, Input, InputRef, List, Modal, Tooltip } from 'antd';
-import AvatarPlaceholder from '/public/avatar-placeholder.svg';
 import { CloseOutlined, DeleteOutlined, EditOutlined, EllipsisOutlined } from '@ant-design/icons';
-import { useSelector } from 'react-redux';
-import { RootState } from '@/stores';
-import { useDeleteComment } from '@/hooks/mutate/comment/use-delete-comment';
-import { useMessage } from '@/hooks/use-message';
 import { useQueryClient } from '@tanstack/react-query';
-import { commentKeys } from '@/consts/factory/comment';
-import { useRef, useState } from 'react';
+import { Button, Dropdown, Flex, Form, Input, InputRef, List, Modal, Tooltip } from 'antd';
+import { useEffect, useRef, useState } from 'react';
+import { useSelector } from 'react-redux';
 import { useOnClickOutside } from 'usehooks-ts';
-import { useUpdateComment } from '@/hooks/mutate/comment/use-update-comment';
-import { useCreateReply } from '@/hooks/mutate/comment/use-create-comment';
+
+import AvatarPlaceholder from '/public/avatar-placeholder.svg';
+import { SOCKET_EVENT } from '@/consts/common';
+import { commentKeys } from '@/consts/factory/comment';
 import { postKeys } from '@/consts/factory/post';
+import { useCreateReply } from '@/hooks/mutate/comment/use-create-comment';
+import { useDeleteComment } from '@/hooks/mutate/comment/use-delete-comment';
+import { useUpdateComment } from '@/hooks/mutate/comment/use-update-comment';
+import { useCommentByPost } from '@/hooks/query/comment/use-comment-by-post';
+import { useMessage } from '@/hooks/use-message';
+import { useWebSocket } from '@/utils/socket';
 
 const { confirm } = Modal;
 
@@ -24,6 +28,7 @@ interface PostCommentListProps {
 }
 
 const PostCommentList = ({ postId, isShown }: PostCommentListProps) => {
+    const socket = useWebSocket();
     const inputRef = useRef<any>(null);
     const [form] = Form.useForm();
     const [formReply] = Form.useForm();
@@ -42,6 +47,18 @@ const PostCommentList = ({ postId, isShown }: PostCommentListProps) => {
     const { mutate: deleteComment } = useDeleteComment();
     const { mutate: updateComment } = useUpdateComment();
     const { mutate: createReply } = useCreateReply();
+
+    useEffect(() => {
+        socket.on(SOCKET_EVENT.UPDATE_DELETE_COMMENT, () => {
+            queryClient.invalidateQueries({
+                queryKey: commentKeys.byPost(postId),
+            });
+        });
+
+        return () => {
+            socket.off(SOCKET_EVENT.COMMENT);
+        };
+    }, []);
 
     if (!comments) {
         return null;
@@ -65,9 +82,9 @@ const PostCommentList = ({ postId, isShown }: PostCommentListProps) => {
                         queryClient.invalidateQueries({
                             queryKey: postKeys.listing(),
                         });
-                        queryClient.invalidateQueries({
-                            queryKey: commentKeys.byPost(postId),
-                        });
+                        // queryClient.invalidateQueries({
+                        //     queryKey: commentKeys.byPost(postId),
+                        // });
                     },
                 });
             },

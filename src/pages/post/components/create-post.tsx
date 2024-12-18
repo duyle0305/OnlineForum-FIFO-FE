@@ -1,32 +1,44 @@
-import type { TopicListingParams } from '@/hooks/query/topic/use-topics-listing';
-import type { RootState } from '@/stores';
-import type { OnAction } from '@/types';
-import type { CreatePostPayload } from '@/types/post/post';
-import type { GetProp, UploadFile, UploadProps } from 'antd';
-import type { FC } from 'react';
-
-import { PaperClipOutlined } from '@ant-design/icons';
-import { CKEditor } from '@ckeditor/ckeditor5-react';
-import { useQueryClient } from '@tanstack/react-query';
-import { Button, Card, Flex, Form, Image, Input, message, Modal, Select, Space, Tooltip, Upload } from 'antd';
-import { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { useSearchParams } from 'react-router-dom';
-
-import EmojiSvg from '/public/emoji.svg';
-import GallerySvg from '/public/gallery.svg';
-import Tiptap from '@/components/tiptap/tiptap';
 import { UserInfo } from '@/components/user/user-info';
-import { DEFAULT_PAGE, DEFAULT_PAGE_SIZE } from '@/consts/common';
-import { postKeys } from '@/consts/factory/post';
-import { useCreateDraftPost } from '@/hooks/mutate/post/use-create-draft-post';
+import {
+    Button,
+    Card,
+    Flex,
+    Form,
+    Input,
+    message,
+    Select,
+    Space,
+    Upload,
+    UploadFile,
+    UploadProps,
+    Image,
+    Modal,
+    GetProp,
+    Tooltip,
+} from 'antd';
+import GallerySvg from '/public/gallery.svg';
+import EmojiSvg from '/public/emoji.svg';
+import { OnAction } from '@/types';
+import { FC, useEffect, useState } from 'react';
 import { useCreatePost } from '@/hooks/mutate/post/use-create-post';
-import { useCategoriesListing } from '@/hooks/query/category/use-category-listing';
-import { useTagsListing } from '@/hooks/query/tag/use-tags-listing';
-import { useTopicsListing } from '@/hooks/query/topic/use-topics-listing';
+import { useQueryClient } from '@tanstack/react-query';
+import { postKeys } from '@/consts/factory/post';
+import { CreatePostPayload } from '@/types/post/post';
 import { useMessage } from '@/hooks/use-message';
+import { useCreateDraftPost } from '@/hooks/mutate/post/use-create-draft-post';
+import { useSearchParams } from 'react-router-dom';
 import { useUploadFile } from '@/hooks/use-upload-file';
+import { TopicListingParams, useTopicsListing } from '@/hooks/query/topic/use-topics-listing';
+import { DEFAULT_PAGE, DEFAULT_PAGE_SIZE } from '@/consts/common';
+import { useTagsListing } from '@/hooks/query/tag/use-tags-listing';
+import { useSelector } from 'react-redux';
+import { RootState } from '@/stores';
+import { useDispatch } from 'react-redux';
 import { setPost } from '@/stores/post';
+import { PaperClipOutlined } from '@ant-design/icons';
+import { useCategoriesListing } from '@/hooks/query/category/use-category-listing';
+import { CKEditor } from '@ckeditor/ckeditor5-react';
+import Tiptap from '@/components/tiptap/tiptap';
 
 interface CreatePostProps {
     onCancel: OnAction;
@@ -42,7 +54,6 @@ type FileType = Parameters<GetProp<UploadProps, 'beforeUpload'>>[0];
 const getBase64 = (file: FileType): Promise<string> =>
     new Promise((resolve, reject) => {
         const reader = new FileReader();
-
         reader.readAsDataURL(file);
         reader.onload = () => resolve(reader.result as string);
         reader.onerror = error => reject(error);
@@ -125,7 +136,6 @@ export const CreatePost: FC<CreatePostProps> = ({ onCancel }) => {
         if (!form.getFieldValue('title')) {
             onCancel && onCancel();
             form.resetFields();
-
             return;
         }
 
@@ -170,10 +180,8 @@ export const CreatePost: FC<CreatePostProps> = ({ onCancel }) => {
 
     const onRemoveFile = (file: UploadFile) => {
         const index = fileList.indexOf(file);
-
         if (index > -1) {
             const newImgUrlList = imgUrlList.slice();
-
             newImgUrlList.splice(index, 1);
             setImgUrlList(newImgUrlList);
             setFileList(fileList.filter(item => item.uid !== file.uid));
@@ -186,10 +194,8 @@ export const CreatePost: FC<CreatePostProps> = ({ onCancel }) => {
 
     const onRemoveAnotherFile = (file: UploadFile) => {
         const index = anotherFileList.indexOf(file);
-
         if (index > -1) {
             const newImgUrlList = urlFileList.slice();
-
             newImgUrlList.splice(index, 1);
             setUrlFileList(newImgUrlList);
             setAnotherFileList(anotherFileList.filter(item => item.uid !== file.uid));
@@ -203,7 +209,6 @@ export const CreatePost: FC<CreatePostProps> = ({ onCancel }) => {
                 url: imgUrlList[index],
             };
         });
-
         setFileList(appendFieldFileList);
     }, [imgUrlList]);
 
